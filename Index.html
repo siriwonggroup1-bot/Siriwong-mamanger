@@ -1,0 +1,3734 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ระบบจัดการงาน เซลล์ ฝ่ายออกแบบ และโฟร์แมน - Siriwong</title>
+  
+  <!-- PWA & Mobile Web App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Siriwong">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0369a1">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1048/1048953.png">
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1048/1048953.png">
+  
+  <!-- CSS Framework & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      height: 100% !important;
+      min-height: 100vh !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background-color: #0f172a !important;
+      color: #1e293b;
+      font-family: 'Prompt', sans-serif;
+    }
+    #app {
+      min-height: 100vh !important;
+      width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    #loginView {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #0f172a;
+    }
+    #mainApp {
+      min-height: 100vh;
+      width: 100%;
+      flex: 1 1 auto;
+    }
+    .min-h-screen { min-height: 100vh !important; }
+    *, ::before, ::after { box-sizing: border-box; }
+    
+    /* Built-in Layout & Utility Fallbacks */
+    .flex { display: flex !important; }
+    .flex-col { flex-direction: column !important; }
+    .flex-1 { flex: 1 1 0% !important; }
+    .flex-wrap { flex-wrap: wrap !important; }
+    .items-center { align-items: center !important; }
+    .justify-center { justify-content: center !important; }
+    .justify-between { justify-content: space-between !important; }
+    .grid { display: grid !important; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .grid-cols-7 { grid-template-columns: repeat(7, minmax(0, 1fr)) !important; }
+    .gap-1 { gap: 0.25rem !important; }
+    .gap-2 { gap: 0.5rem !important; }
+    .gap-3 { gap: 0.75rem !important; }
+    .gap-4 { gap: 1rem !important; }
+    .p-2 { padding: 0.5rem !important; }
+    .p-3 { padding: 0.75rem !important; }
+    .p-4 { padding: 1rem !important; }
+    .p-6 { padding: 1.5rem !important; }
+    .py-2 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
+    .py-3 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+    .px-3 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+    .px-4 { padding-left: 1rem !important; padding-right: 1rem !important; }
+    .w-full { width: 100% !important; }
+    .max-w-md { max-width: 28rem !important; }
+    .max-w-7xl { max-width: 80rem !important; }
+    .mx-auto { margin-left: auto !important; margin-right: auto !important; }
+    .rounded-xl { border-radius: 0.75rem !important; }
+    .rounded-2xl { border-radius: 1rem !important; }
+    .rounded-full { border-radius: 9999px !important; }
+    .bg-white { background-color: #ffffff !important; }
+    .bg-slate-50 { background-color: #f8fafc !important; }
+    .bg-slate-100 { background-color: #f1f5f9 !important; }
+    .bg-slate-900 { background-color: #0f172a !important; }
+    .border { border-style: solid !important; border-width: 1px !important; }
+    .border-slate-200 { border-color: #e2e8f0 !important; }
+    .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important; }
+    .shadow-md { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important; }
+    .font-bold { font-weight: 700 !important; }
+    .font-semibold { font-weight: 600 !important; }
+    .text-xs { font-size: 0.75rem !important; }
+    .text-sm { font-size: 0.875rem !important; }
+    .text-white { color: #ffffff !important; }
+    .text-slate-600 { color: #475569 !important; }
+    .text-slate-800 { color: #1e293b !important; }
+    .bg-brand-600 { background-color: #0369a1 !important; }
+    /* DARK MODE (NIGHT MODE) THEME OVERRIDES */
+    body.dark-mode {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+    }
+    body.dark-mode header,
+    body.dark-mode nav,
+    body.dark-mode .bg-white {
+      background-color: #1e293b !important;
+      border-color: #334155 !important;
+      color: #f8fafc !important;
+    }
+    body.dark-mode .bg-slate-50,
+    body.dark-mode .bg-slate-100 {
+      background-color: #334155 !important;
+      border-color: #475569 !important;
+      color: #f8fafc !important;
+    }
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+      background-color: #0f172a !important;
+      color: #ffffff !important;
+      border-color: #475569 !important;
+    }
+    body.dark-mode .text-slate-900,
+    body.dark-mode .text-slate-800,
+    body.dark-mode .text-slate-700 {
+      color: #f8fafc !important;
+    }
+    body.dark-mode .text-slate-600,
+    body.dark-mode .text-slate-500 {
+      color: #cbd5e1 !important;
+    }
+    body.dark-mode .border-slate-200,
+    body.dark-mode .border-slate-100 {
+      border-color: #334155 !important;
+    }
+
+    /* Hidden MUST be at bottom */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body class="bg-slate-100 antialiased min-h-screen flex flex-col">
+
+  <div id="app" class="flex-1 flex flex-col">
+
+    <!-- 1. LOGIN SCREEN (Default Startup Screen) -->
+    <div id="loginView" class="flex-1 flex items-center justify-center p-4 bg-slate-900 min-h-screen">
+      <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 border border-slate-100 space-y-6">
+        
+        <div class="text-center">
+          <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3 text-white shadow-lg">
+            <i data-lucide="building-2" class="w-9 h-9"></i>
+          </div>
+          <h1 class="text-2xl font-bold text-slate-900">Siriwong Workflow</h1>
+          <p class="text-xs text-slate-500 mt-1">ระบบบริหารงาน เซลล์ • ฝ่ายออกแบบ • โฟร์แมน</p>
+        </div>
+
+        <!-- LOGIN CONTAINER -->
+        <form onsubmit="event.preventDefault(); handleLogin(event); return false;" class="space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">ชื่อผู้ใช้งาน หรือ ชื่อพนักงาน (Username / Thai Name)</label>
+            <input type="text" id="loginUsername" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="พิมพ์ชื่อผู้ใช้ เช่น Runlalit, กัลยา, ภัควัฒน์... (หรือกดปุ่มเข้าสู่ระบบด้านล่าง)">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">รหัสผ่านประจำตัว (Password)</label>
+            <input type="password" id="loginPassword" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="กรอกรหัสผ่าน (หรือว่างไว้)...">
+          </div>
+          <button type="button" onclick="handleLogin(event)" id="btnLoginSubmit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 active:scale-98 text-white font-bold rounded-xl shadow-md text-sm transition cursor-pointer select-none">
+            เข้าสู่ระบบ (Login)
+          </button>
+        </form>
+
+        <div class="pt-2 border-t border-slate-100">
+          <label class="block text-[11px] font-semibold text-slate-500 mb-1">หรือเลือกชื่อพนักงานเพื่อเข้าใช้งานทันที:</label>
+          <select id="quickStaffSelect" onchange="autoFillStaffLogin(this.value)" class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">-- เลือกพนักงานสำหรับเข้าสู่ระบบทันที --</option>
+          </select>
+        </div>
+
+        <div class="pt-3 text-center">
+          <button type="button" onclick="showPasswordHelpModal()" class="text-xs text-blue-600 hover:underline font-semibold flex items-center justify-center gap-1 mx-auto">
+            <i data-lucide="key" class="w-3.5 h-3.5"></i>
+            <span>ดูตาราง Username และรหัสผ่านเริ่มต้นของพนักงาน</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- 2. MAIN APPLICATION -->
+    <div id="mainApp" class="hidden flex-1 flex flex-col">
+      
+      <!-- TOP NAVBAR -->
+      <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-bold">
+              S
+            </div>
+            <div>
+              <h1 class="font-bold text-base text-slate-900 leading-none">Siriwong Manager</h1>
+              <span class="text-[11px] text-slate-500">ระบบติดตามงานออกแบบและคุมงานหน้างาน</span>
+            </div>
+          </div>
+
+          <!-- NAVIGATION TABS -->
+          <nav class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+            <button onclick="switchTab('projects')" id="tabBtn-projects" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white transition flex items-center gap-1.5">
+              <i data-lucide="layout-grid" class="w-4 h-4"></i>
+              <span>โครงการทั้งหมด</span>
+              <span id="badge-all-count" class="bg-white/20 text-white text-[10px] px-1.5 py-0.2 rounded-full">0</span>
+            </button>
+            <button onclick="switchTab('approvals')" id="tabBtn-approvals" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200 transition flex items-center gap-1.5">
+              <i data-lucide="check-square" class="w-4 h-4 text-purple-600"></i>
+              <span>รออนุมัติแบบ</span>
+              <span id="badge-approvals-count" class="bg-purple-100 text-purple-800 text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+            </button>
+            <button onclick="switchTab('revisions')" id="tabBtn-revisions" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200 transition flex items-center gap-1.5">
+              <i data-lucide="alert-triangle" class="w-4 h-4 text-red-600"></i>
+              <span>ถูกตีกลับแก้ไข</span>
+              <span id="badge-revisions-count" class="bg-red-100 text-red-800 text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+            </button>
+            <button onclick="switchTab('dailyTasks')" id="tabBtn-dailyTasks" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200 transition flex items-center gap-1.5">
+              <i data-lucide="clipboard-list" class="w-4 h-4 text-blue-600"></i>
+              <span>มอบหมายงานรายวัน</span>
+              <span id="badge-daily-tasks-count" class="bg-blue-100 text-blue-800 text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+            </button>
+            <button onclick="switchTab('calendar')" id="tabBtn-calendar" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200 transition flex items-center gap-1.5">
+              <i data-lucide="calendar" class="w-4 h-4 text-emerald-600"></i>
+              <span>ปฏิทินงาน</span>
+            </button>
+            <button onclick="switchTab('permissions')" id="tabBtn-permissions" class="tab-btn manager-only px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200 transition flex items-center gap-1.5">
+              <i data-lucide="shield" class="w-4 h-4 text-amber-600"></i>
+              <span>จัดการพนักงาน</span>
+            </button>
+          </nav>
+
+          <!-- USER ACTION BUTTONS -->
+          <div class="flex items-center gap-2">
+            <button onclick="openPwaInstallGuide()" id="btnInstallPwa" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-blue-200" title="ติดตั้งแอป Siriwong ลงมือถือ/iPad">
+              <i data-lucide="smartphone" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span>📲 ติดตั้งแอป</span>
+            </button>
+            <button onclick="toggleThemeMode()" id="btnThemeToggle" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-slate-200" title="สลับโหมดกลางวัน/กลางคืน">
+              <i data-lucide="moon" id="themeIcon" class="w-3.5 h-3.5 text-amber-500"></i>
+              <span id="themeText">โหมดมืด</span>
+            </button>
+            <button onclick="refreshDataFromServer(true)" id="btnSyncData" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-slate-200">
+              <i data-lucide="refresh-cw" id="syncIcon" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span>ซิงค์ข้อมูล</span>
+            </button>
+            <a id="btnOpenSheet" href="#" target="_blank" class="hidden px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5">
+              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+              <span>Google Sheet</span>
+            </a>
+            <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
+              <img id="userAvatar" onclick="openMyProfileModal()" src="" class="w-8 h-8 rounded-full object-cover border border-blue-500 cursor-pointer" title="คลิกเพื่อแก้ไขรูปโปรไฟล์">
+              <div class="hidden sm:block text-left">
+                <div id="userName" class="text-xs font-bold text-slate-800"></div>
+                <div id="userRoleBadge" class="text-[10px] text-slate-500"></div>
+              </div>
+              <button onclick="handleLogout()" class="p-1.5 text-slate-400 hover:text-red-600 rounded-lg" title="ออกจากระบบ">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+      <!-- MAIN CONTAINER -->
+      <main class="flex-1 max-w-7xl w-full mx-auto p-4 space-y-4">
+
+        <!-- TAB 1: PROJECTS -->
+        <div id="tabContent-projects" class="tab-content space-y-4">
+          
+          <!-- CONTROLS & FILTER BAR -->
+          <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+            
+            <div class="flex flex-wrap items-center gap-3">
+              <div class="relative">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
+                <input type="text" id="globalSearch" oninput="renderApp()" class="pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs w-48 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ค้นหาชื่อลูกค้า, รหัส...">
+              </div>
+
+              <!-- STATUS FILTER -->
+              <div class="flex items-center gap-1">
+                <span class="text-xs font-bold text-slate-600">สถานะ:</span>
+                <select id="filterStatus" onchange="renderApp()" class="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium">
+                  <option value="all">ทั้งหมด (All)</option>
+                  <option value="lead">1. รับเรื่อง / ใบเสนอราคา</option>
+                  <option value="designing">2. กำลังออกแบบ</option>
+                  <option value="design_review">3. รออนุมัติแบบ</option>
+                  <option value="revision_needed">4. ถูกตีกลับแก้ไข</option>
+                  <option value="construction">5. ดำเนินการหน้างาน</option>
+                  <option value="inspection">6. ตรวจรับงาน</option>
+                  <option value="completed">7. เสร็จสิ้นโครงการ</option>
+                </select>
+              </div>
+
+              <!-- STAFF FILTER -->
+              <div class="flex items-center gap-1">
+                <span class="text-xs font-bold text-slate-600">พนักงาน:</span>
+                <select id="filterStaff" onchange="renderApp()" class="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium">
+                  <option value="all">พนักงานทุกคน (All)</option>
+                </select>
+              </div>
+
+              <!-- MONTH FILTER -->
+              <div class="flex items-center gap-1">
+                <span class="text-xs font-bold text-slate-600">เดือน:</span>
+                <select id="filterMonth" onchange="renderApp()" class="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium">
+                  <option value="all">ทุกเดือน (All)</option>
+                  <option value="01">มกราคม</option>
+                  <option value="02">กุมภาพันธ์</option>
+                  <option value="03">มีนาคม</option>
+                  <option value="04">เมษายน</option>
+                  <option value="05">พฤษภาคม</option>
+                  <option value="06">มิถุนายน</option>
+                  <option value="07">กรกฎาคม</option>
+                  <option value="08">สิงหาคม</option>
+                  <option value="09">กันยายน</option>
+                  <option value="10">ตุลาคม</option>
+                  <option value="11">พฤศจิกายน</option>
+                  <option value="12">ธันวาคม</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="openProjectModal()" id="btnCreateProject" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>สร้างโครงการใหม่</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- KANBAN BOARD VIEW -->
+          <div id="kanbanBoard" class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-7 gap-3 items-start overflow-x-auto pb-4">
+            <!-- Columns injected by JS -->
+          </div>
+
+        </div>
+
+        <!-- TAB 2: APPROVALS LIST -->
+        <div id="tabContent-approvals" class="tab-content hidden space-y-4">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 shadow-xs">
+            <h2 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+              <i data-lucide="check-square" class="w-5 h-5 text-purple-600"></i>
+              <span>รายการรออนุมัติแบบ (Design Approvals)</span>
+            </h2>
+            <div id="approvalsListContainer" class="space-y-3"></div>
+          </div>
+        </div>
+
+        <!-- TAB 3: REVISIONS LIST -->
+        <div id="tabContent-revisions" class="tab-content hidden space-y-4">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 shadow-xs">
+            <h2 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+              <i data-lucide="alert-triangle" class="w-5 h-5 text-red-600"></i>
+              <span>รายการถูกตีกลับแก้ไข (Revision Backlog)</span>
+            </h2>
+            <div id="revisionsListContainer" class="space-y-3"></div>
+          </div>
+        </div>
+
+        <!-- TAB: DAILY TASKS (ระบบมอบหมายงานรายวัน) -->
+        <div id="tabContent-dailyTasks" class="tab-content hidden space-y-4">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b pb-4">
+              <div>
+                <h2 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+                  <i data-lucide="clipboard-list" class="w-5 h-5 text-blue-600"></i>
+                  <span>ระบบมอบหมายงานรายวัน (Daily Task Assignment)</span>
+                </h2>
+                <p class="text-xs text-slate-500">มอบหมายงานรายวันโดยผู้จัดการและฝ่ายขาย ให้แก่ฝ่ายออกแบบและโฟร์แมน</p>
+              </div>
+
+              <!-- ASSIGN TASK BUTTON (Visible ONLY to Manager & Sales) -->
+              <button onclick="openDailyTaskModal()" id="btnCreateDailyTask" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>+ มอบหมายงานใหม่</span>
+              </button>
+            </div>
+
+            <!-- FILTER CONTROLS FOR DAILY TASKS -->
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+              <div class="flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-1">
+                  <span class="font-bold text-slate-600">ผู้รับมอบหมาย:</span>
+                  <select id="filterDtAssignee" onchange="renderDailyTasksList()" class="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg font-semibold">
+                    <option value="all">ทุกคน (All Designers & Foremen)</option>
+                  </select>
+                </div>
+
+                <div class="flex items-center gap-1">
+                  <span class="font-bold text-slate-600">สถานะ:</span>
+                  <select id="filterDtStatus" onchange="renderDailyTasksList()" class="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg font-semibold">
+                    <option value="all">ทุกสถานะ (All)</option>
+                    <option value="pending">⏳ รอดำเนินการ</option>
+                    <option value="in_progress">🔨 กำลังทำ</option>
+                    <option value="completed">✅ เสร็จสิ้นแล้ว</option>
+                  </select>
+                </div>
+
+                <div class="flex items-center gap-1">
+                  <span class="font-bold text-slate-600">ความสำคัญ:</span>
+                  <select id="filterDtPriority" onchange="renderDailyTasksList()" class="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg font-semibold">
+                    <option value="all">ทั้งหมด (All)</option>
+                    <option value="high">🔴 ด่วนมาก</option>
+                    <option value="medium">🟡 ปานกลาง</option>
+                    <option value="normal">🟢 ปกติ</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="text-[11px] text-slate-500 font-semibold" id="dtSummaryText">
+                แสดงผล 0 รายการ
+              </div>
+            </div>
+
+            <!-- DAILY TASKS LIST CONTAINER -->
+            <div id="dailyTasksListContainer" class="space-y-3 pt-1">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: CALENDAR -->
+        <div id="tabContent-calendar" class="tab-content hidden space-y-4">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 shadow-xs">
+            <div class="flex items-center justify-between">
+              <h2 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+                <i data-lucide="calendar" class="w-5 h-5 text-emerald-600"></i>
+                <span id="calendarMonthTitle">ปฏิทินโครงการ</span>
+              </h2>
+              <div class="flex items-center gap-2">
+                <button onclick="changeCalendarMonth(-1)" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-bold">← เดือนก่อนหน้า</button>
+                <button onclick="changeCalendarMonth(1)" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-bold">เดือนถัดไป →</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-7 gap-1 text-center font-bold text-xs text-slate-500 border-b pb-2">
+              <div>อา.</div><div>จ.</div><div>อ.</div><div>พ.</div><div>พฤ.</div><div>ศ.</div><div>ส.</div>
+            </div>
+            <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 text-xs"></div>
+          </div>
+        </div>
+
+        <!-- TAB 5: PERMISSIONS & USER MANAGEMENT -->
+        <div id="tabContent-permissions" class="tab-content hidden space-y-4">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 shadow-xs">
+            <div class="flex items-center justify-between border-b pb-4">
+              <div>
+                <h2 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+                  <i data-lucide="users" class="w-5 h-5 text-amber-600"></i>
+                  <span>จัดการพนักงานและกำหนดสิทธิ์ (Users & Permissions)</span>
+                </h2>
+                <p class="text-xs text-slate-500">จัดการบทบาท สิทธิ์สร้าง/อนุมัติงานของทีมพนักงานทั้ง 12 ท่าน</p>
+              </div>
+              <button onclick="openUserModal()" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md">
+                + เพิ่มพนักงานใหม่
+              </button>
+            </div>
+            <div id="usersListTable" class="overflow-x-auto"></div>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- PROJECT DETAIL MODAL -->
+  <div id="projectModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto space-y-5 custom-scrollbar">
+      
+      <div class="flex items-center justify-between border-b pb-3">
+        <div class="flex items-center gap-2">
+          <div>
+            <h3 id="pmModalTitle" class="font-bold text-lg text-slate-900"></h3>
+            <span id="pmModalCode" class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600"></span>
+          </div>
+          <button type="button" onclick="copyProjectShareLink()" class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded-xl text-xs font-bold border border-blue-200 flex items-center gap-1 shadow-2xs" title="คัดลอกลิงก์แชร์โครงการให้คนภายนอกดูแบบอ่านอย่างเดียว">
+            <i data-lucide="share-2" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span class="hidden sm:inline">🔗 คัดลอกลิงก์แชร์</span>
+          </button>
+        </div>
+        <button onclick="closeProjectModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- 1. SALES HANDOVER BOX -->
+      <div id="salesHandoverBox" class="hidden bg-blue-50 border border-blue-200 p-3.5 rounded-2xl flex items-center justify-between">
+        <div class="text-xs text-blue-900">
+          <strong class="block font-bold">🚀 เมนูฝ่ายขาย (Sales Handover):</strong>
+          <span>รับเรื่องและทำเสนอราคาเรียบร้อย? กดส่งต่อโครงการให้ฝ่ายออกแบบเริ่มทำงาน</span>
+        </div>
+        <button onclick="handleSalesHandover()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md">
+          ส่งต่อให้ฝ่ายออกแบบ →
+        </button>
+      </div>
+
+      <!-- 2. REVISION REQUIRED ALERT BOX -->
+      <div id="revisionAlertBox" class="hidden bg-red-50 border border-red-200 p-3.5 rounded-2xl space-y-2">
+        <div class="text-xs text-red-900">
+          <strong class="block font-bold">⚠️ งานถูกตีกลับแก้ไข (Revision Required):</strong>
+          <span id="revisionReasonText"></span>
+        </div>
+        <button onclick="handleResubmitRevision()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-md">
+          🔄 แก้ไขเรียบร้อยแล้ว -> ส่งกลับไปรออนุมัติแบบ
+        </button>
+      </div>
+
+      <!-- 3. MANAGER & FOREMAN APPROVAL ACTION BOX (EXCLUSIVE FOR MANAGER & FOREMAN) -->
+      <div id="managerForemanApprovalBox" class="hidden bg-purple-50 border border-purple-200 p-4 rounded-2xl space-y-3">
+        <div class="text-xs text-purple-900">
+          <strong class="block font-bold text-sm">🛡️ เมนูพิจารณาอนุมัติแบบ (เฉพาะผู้จัดการและโฟร์แมนเท่านั้น):</strong>
+          <span>ตรวจสอบแบบแปลน 2D / 3D หากถูกต้องตามสเปก ให้กดอนุมัติเพื่อเริ่มงาน หรือกดตีกลับเพื่อให้แก้ไข</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 pt-1">
+          <button type="button" onclick="handleApproveDesignByRole()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <span>✅ อนุมัติแบบแปลน (Approve)</span>
+          </button>
+          <button type="button" onclick="handleRejectDesignByRole()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5">
+            <i data-lucide="x-circle" class="w-4 h-4"></i>
+            <span>❌ ตีกลับแก้ไข (Reject Revision)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. READ ONLY NOTICE BANNER FOR NON-EDITORS -->
+      <div id="readOnlyNoticeBox" class="hidden bg-slate-100 border border-slate-300 p-3 rounded-2xl flex items-center gap-2 text-xs text-slate-600 font-semibold">
+        <i data-lucide="lock" class="w-4 h-4 text-slate-500"></i>
+        <span>🔒 โหมดดูอย่างเดียว: ข้อมูลหลักของโครงการนี้ถูกล็อกไว้ (สิทธิ์แก้ไขเปิดให้เฉพาะฝ่ายขายในขั้นรับเรื่อง หรือผู้จัดการเท่านั้น) คุณสามารถแนบไฟล์และส่งข้อความสนทนาได้</span>
+      </div>
+
+      <!-- FORM FIELDS (Div Container to prevent iPad / Mobile Safari IFRAME reload bugs) -->
+      <div id="projectForm" class="space-y-4 text-xs">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ชื่อลูกค้า (Customer Name)</label>
+            <input type="text" id="pmCustomerName" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">เบอร์โทรศัพท์ (Customer Phone)</label>
+            <input type="text" id="pmCustomerPhone" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ที่อยู่หน้างาน (Address)</label>
+          <input type="text" id="pmAddress" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ประเภทงาน (Project Type)</label>
+            <input type="text" id="pmProjectType" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">งบประมาณ (Budget ฿)</label>
+            <input type="number" id="pmBudget" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">สถานะโครงการ (Status)</label>
+            <select id="pmStatusSelect" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-blue-900">
+              <option value="lead">1. รับเรื่อง / เสนอราคา</option>
+              <option value="designing">2. กำลังออกแบบ</option>
+              <option value="design_review">3. รออนุมัติแบบ</option>
+              <option value="revision_needed">4. ถูกตีกลับแก้ไข</option>
+              <option value="construction">5. ดำเนินการหน้างาน</option>
+              <option value="inspection">6. ตรวจรับงาน</option>
+              <option value="completed">7. เสร็จสิ้นโครงการ</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">วันเริ่มงาน (Start Date)</label>
+            <input type="date" id="pmStartDate" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">วันส่งมอบงาน (Due Date)</label>
+            <input type="date" id="pmDueDate" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">เจ้าหน้าที่ขาย (Sales)</label>
+            <select id="pmSalesSelect" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium"></select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ฝ่ายออกแบบ (Designer)</label>
+            <select id="pmDesignerSelect" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium"></select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">โฟร์แมน (Foreman)</label>
+            <select id="pmForemanSelect" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium"></select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">หมายเหตุโครงการ (Notes)</label>
+          <textarea id="pmNotes" rows="2" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
+        </div>
+
+        <!-- 5. PROGRESS PERCENTAGE & FOREMAN TASK SCHEDULE (MANAGER EDITABLE ONLY) -->
+        <div class="pt-4 border-t border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="font-bold text-slate-900 flex items-center gap-1.5">
+              <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-600"></i>
+              <span>ความคืบหน้างานและตารางช่างเข้าหน้างาน (% Progress & Tasks)</span>
+            </h4>
+            <span id="progressValueBadge" class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-xs">0%</span>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-xs font-semibold text-slate-700">
+              <span>% ความคืบหน้าของโครงการ (0% - 100%):</span>
+              <span id="managerProgressNotice" class="text-[10px] text-amber-700 font-bold hidden">(เฉพาะผู้จัดการแก้ไขได้)</span>
+            </div>
+            <input type="range" id="pmProgressRange" min="0" max="100" value="0" oninput="updateProgressBadge(this.value)" class="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+          </div>
+
+          <!-- FOREMAN TASK SCHEDULE TABLE -->
+          <div class="space-y-2 pt-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-700">🔨 ตารางระบุงานช่างเข้าหน้างาน (Task Schedule):</span>
+              <button type="button" id="btnAddForemanTask" onclick="addForemanTaskRow()" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold rounded-xl text-xs border border-emerald-200 flex items-center gap-1">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                <span>+ เพิ่มรายการงานช่าง</span>
+              </button>
+            </div>
+            
+            <div class="overflow-x-auto border border-slate-200 rounded-2xl bg-slate-50 p-2">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b text-slate-600 font-bold text-[11px]">
+                    <th class="p-2 w-28">วันที่เข้างาน</th>
+                    <th class="p-2 w-32">ทีมช่าง / ผู้รับเหมา</th>
+                    <th class="p-2">รายละเอียดงานที่ทำ</th>
+                    <th class="p-2 w-28">สถานะงาน</th>
+                    <th class="p-2 w-12 text-center">ลบ</th>
+                  </tr>
+                </thead>
+                <tbody id="pmTasksTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- MULTI-MEDIA & FILE ATTACHMENTS GALLERY (Photos, Videos, PDFs) -->
+        <div class="pt-4 border-t border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="font-bold text-slate-900 flex items-center gap-1.5">
+              <i data-lucide="paperclip" class="w-4 h-4 text-blue-600"></i>
+              <span>คลังแนบรูปภาพ วิดีโอ และไฟล์งาน (Photos, Videos & Docs)</span>
+            </h4>
+            <label class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs rounded-xl cursor-pointer border border-blue-200 flex items-center gap-1">
+              <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+              <span>+ แนบไฟล์ / รูป / วิดีโอ</span>
+              <input type="file" id="pmFileInput" onchange="handleProjectFileUpload(event)" multiple accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.zip" class="hidden">
+            </label>
+          </div>
+          <div id="pmFileListContainer" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
+        </div>
+
+        <!-- COMMENTS & MEDIA DISCUSSION (WITH IMAGE & VIDEO ATTACHMENTS & GPS LOCATION) -->
+        <div class="pt-4 border-t border-slate-200 space-y-3">
+          <h4 class="font-bold text-slate-900 flex items-center gap-1.5">
+            <i data-lucide="message-square" class="w-4 h-4 text-blue-600"></i>
+            <span>ข้อความสนทนางาน (Comments & Media)</span>
+          </h4>
+          
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <input type="text" id="pmCommentInput" class="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm min-h-[44px]" placeholder="พิมพ์ข้อความสนทนา...">
+              
+              <button type="button" onclick="shareCurrentGpsLocation()" class="px-3 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-200 flex items-center gap-1 min-h-[44px]" title="ส่งพิกัด GPS ปักหมุดหน้างานลงคอมเมนต์">
+                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i>
+                <span class="hidden sm:inline">📍 แชร์พิกัด</span>
+              </button>
+
+              <label class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl cursor-pointer border border-slate-200 flex items-center gap-1 min-h-[44px]" title="แนบรูปภาพหรือวิดีโอในคอมเมนต์">
+                <i data-lucide="image" class="w-4 h-4 text-blue-600"></i>
+                <span class="hidden sm:inline">แนบรูป/วิดีโอ</span>
+                <input type="file" id="commentMediaInput" onchange="handleCommentMediaSelect(event)" accept="image/*,video/*" class="hidden">
+              </label>
+
+              <button type="button" onclick="handleAddComment()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow-md min-h-[44px]">
+                ส่งข้อความ
+              </button>
+            </div>
+
+            <div id="commentMediaPreviewContainer" class="hidden flex items-center justify-between bg-blue-50 border border-blue-200 p-2 rounded-xl text-xs">
+              <span id="commentMediaFileName" class="text-blue-900 font-bold truncate"></span>
+              <button type="button" onclick="clearCommentMediaSelection()" class="text-red-600 font-bold hover:underline">ยกเลิกไฟล์</button>
+            </div>
+          </div>
+
+          <div id="pmCommentsList" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar"></div>
+        </div>
+
+        <!-- PROJECT PURCHASING RECEIPTS & TAX INVOICES SECTION -->
+        <div class="pt-4 border-t border-slate-200 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h4 class="font-bold text-slate-900 flex items-center gap-1.5">
+              <i data-lucide="receipt" class="w-4 h-4 text-emerald-600"></i>
+              <span>🧾 บิลสั่งของ & ใบกำกับภาษีประจำโครงการ (Receipts & Tax Invoices)</span>
+            </h4>
+
+            <button type="button" onclick="openInvoiceModalForCurrentProject()" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-200 flex items-center gap-1 shadow-2xs">
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>+ บันทึกบิลสั่งของในโครงการนี้</span>
+            </button>
+          </div>
+
+          <!-- PROJECT EXPENSE SUMMARY BOXES -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-emerald-50/40 p-3 rounded-2xl border border-emerald-100 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-600 font-medium">💵 ยอดรวมบิลซื้อของโครงการนี้:</span>
+              <strong class="text-emerald-700 font-bold text-sm" id="pmInvTotalSpent">0.00 ฿</strong>
+            </div>
+            <div class="flex items-center justify-between border-t sm:border-t-0 sm:border-l border-emerald-100 pt-2 sm:pt-0 sm:pl-3">
+              <span class="text-purple-700 font-medium">📄 ภาษีซื้อรวม (VAT 7%):</span>
+              <strong class="text-purple-800 font-bold text-sm" id="pmInvTotalVat">0.00 ฿</strong>
+            </div>
+          </div>
+
+          <!-- INVOICES LIST CONTAINER FOR THIS PROJECT -->
+          <div id="pmInvoicesListContainer" class="space-y-2 max-h-56 overflow-y-auto custom-scrollbar"></div>
+        </div>
+
+        <!-- AUDIT ACTIVITY LOG TIMELINE (EVERY USER ACTION RECORDED WITH NAME & TIMESTAMP) -->
+        <div class="pt-4 border-t border-slate-200 space-y-3">
+          <h4 class="font-bold text-slate-900 flex items-center gap-1.5">
+            <i data-lucide="history" class="w-4 h-4 text-purple-600"></i>
+            <span>ประวัติและบันทึกการทำงานในโครงการ (Audit Activity Log)</span>
+          </h4>
+          <div id="pmActivityLogContainer" class="space-y-2 max-h-40 overflow-y-auto custom-scrollbar"></div>
+        </div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-slate-200">
+          <button type="button" id="btnDeleteProject" onclick="handleDeleteProject()" class="hidden px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs rounded-xl border border-red-200 flex items-center gap-1.5 shadow-2xs">
+            <i data-lucide="trash-2" class="w-4 h-4 text-red-600"></i>
+            <span>ลบโครงการ (เฉพาะผู้จัดการ)</span>
+          </button>
+
+          <div class="flex items-center gap-2 ml-auto">
+            <button type="button" onclick="closeProjectModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl font-semibold">ปิดหน้าต่าง</button>
+            <button type="button" id="btnSaveProject" onclick="handleSaveProject(event)" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md cursor-pointer transition flex items-center gap-1">
+              💾 บันทึกข้อมูลโครงการ
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- MY PROFILE MODAL (Change Profile Avatar & Password) -->
+  <div id="myProfileModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+          <i data-lucide="user-cog" class="w-5 h-5 text-blue-600"></i>
+          <span>แก้ไขโปรไฟล์ส่วนตัว (Edit Profile)</span>
+        </h3>
+        <button onclick="closeMyProfileModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="flex flex-col items-center gap-2">
+          <div class="relative group">
+            <img id="myProfileAvatarPreview" src="" class="w-20 h-20 rounded-full object-cover border-2 border-blue-500 shadow-md">
+            <label class="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white cursor-pointer" title="เปลี่ยนรูปโปรไฟล์">
+              <i data-lucide="camera" class="w-6 h-6"></i>
+              <input type="file" id="avatarFileInput" onchange="handleAvatarUpload(event)" accept="image/*" class="hidden">
+            </label>
+          </div>
+          <p class="text-[11px] text-slate-500">แตะที่รูปภาพเพื่อเลือกรูปโปรไฟล์ใหม่จากเครื่อง</p>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ชื่อที่แสดง (Display Name)</label>
+          <input type="text" id="myProfileName" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">รหัสผ่านใหม่ประจำตัว (Password)</label>
+          <input type="password" id="myProfilePassword" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
+        <button onclick="closeMyProfileModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl font-semibold">ยกเลิก</button>
+        <button onclick="saveMyProfile()" class="px-5 py-2 bg-blue-600 text-white rounded-xl font-bold shadow-md">บันทึกการเปลี่ยนแปลง</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- STAFF PROFILE AVATAR EDITOR MODAL (Supports custom file upload & 24 preset avatars gallery for all 12 staff) -->
+  <div id="editStaffProfileModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+            <i data-lucide="image" class="w-5 h-5 text-blue-600"></i>
+            <span>เปลี่ยนรูปภาพโปรไฟล์พนักงาน</span>
+          </h3>
+          <p id="staffAvatarModalSubTitle" class="text-xs text-slate-500 font-semibold"></p>
+        </div>
+        <button onclick="closeStaffProfileModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <!-- 1. CUSTOM FILE UPLOAD SECTION -->
+        <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col items-center gap-3">
+          <img id="staffAvatarPreview" src="" class="w-24 h-24 rounded-full object-cover border-4 border-blue-500 shadow-md">
+          <label class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl cursor-pointer shadow-md flex items-center gap-1.5">
+            <i data-lucide="upload" class="w-4 h-4"></i>
+            <span>เลือกรูปภาพใหม่จากเครื่อง</span>
+            <input type="file" id="staffAvatarFileInput" onchange="handleStaffAvatarFileUpload(event)" accept="image/*" class="hidden">
+          </label>
+          <p class="text-[11px] text-slate-400">รองรับไฟล์รูปภาพ JPG, PNG, WEBP (ไม่จำกัดจำนวนครั้งในการเปลี่ยนรูป)</p>
+        </div>
+
+        <!-- 2. PRESET AVATARS GALLERY (24 HIGHER QUALITY PRESETS) -->
+        <div class="space-y-2">
+          <label class="font-bold text-slate-800 block">หรือเลือกรูปโปรไฟล์สำเร็จรูป (24 รูปแบบ):</label>
+          <div id="presetAvatarsGallery" class="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto p-2 bg-slate-100 rounded-2xl custom-scrollbar border border-slate-200">
+            <!-- Preset images injected by JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+        <button onclick="closeStaffProfileModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs">ยกเลิก</button>
+        <button onclick="saveStaffProfileAvatar()" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-md">บันทึกรูปโปรไฟล์</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- PERMISSIONS CONFIGURATION MODAL -->
+  <div id="permissionsModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-5 h-5 text-amber-600"></i>
+            <span>กำหนดสิทธิ์การใช้งานพนักงาน</span>
+          </h3>
+          <p id="permModalSubTitle" class="text-xs text-slate-500 font-semibold"></p>
+        </div>
+        <button onclick="closePermissionsModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <p class="font-bold text-slate-700">สิทธิ์การทำงานในระบบ (Permissions Matrix):</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          
+          <label class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-blue-50/50">
+            <input type="checkbox" id="perm_can_create_project" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+            <div>
+              <span class="font-bold text-slate-800 block">➕ สร้างโครงการใหม่</span>
+              <span class="text-[10px] text-slate-500">อนุญาตให้สร้างงานใหม่เข้าระบบ</span>
+            </div>
+          </label>
+
+          <label class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-blue-50/50">
+            <input type="checkbox" id="perm_can_edit_project" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+            <div>
+              <span class="font-bold text-slate-800 block">✏️ แก้ไขข้อมูลโครงการ</span>
+              <span class="text-[10px] text-slate-500">อนุญาตให้แก้ไขรายละเอียดงาน</span>
+            </div>
+          </label>
+
+          <label class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-blue-50/50">
+            <input type="checkbox" id="perm_can_handover" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+            <div>
+              <span class="font-bold text-slate-800 block">🚀 ส่งต่อให้ฝ่ายออกแบบ</span>
+              <span class="text-[10px] text-slate-500">ส่งงานต่อให้ดีไซเนอร์เริ่มออกแบบ</span>
+            </div>
+          </label>
+
+          <label class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-blue-50/50">
+            <input type="checkbox" id="perm_can_approve_design" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+            <div>
+              <span class="font-bold text-slate-800 block">✅ อนุมัติแบบแปลน</span>
+              <span class="text-[10px] text-slate-500">อนุมัติแบบแปลนเพื่อเริ่มงานหน้างาน</span>
+            </div>
+          </label>
+
+          <label class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-blue-50/50">
+            <input type="checkbox" id="perm_can_reject_design" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+            <div>
+              <span class="font-bold text-slate-800 block">❌ ตีกลับแก้ไขแบบ</span>
+              <span class="text-[10px] text-slate-500">ส่งตีกลับงานแก้ไขพร้อมเหตุผล</span>
+            </div>
+          </label>
+
+          <label class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-blue-50/50">
+            <input type="checkbox" id="perm_can_upload_files" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+            <div>
+              <span class="font-bold text-slate-800 block">📎 แนบรูป/วิดีโอ/ไฟล์</span>
+              <span class="text-[10px] text-slate-500">แนบสื่อไฟล์งานในโครงการ</span>
+            </div>
+          </label>
+
+          <label class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-blue-50/50">
+            <input type="checkbox" id="perm_can_delete_project" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+            <div>
+              <span class="font-bold text-slate-800 block">🗑️ ลบโครงการ</span>
+              <span class="text-[10px] text-slate-500">สิทธิ์ลบงานออกจากระบบ</span>
+            </div>
+          </label>
+
+          <label class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 cursor-pointer hover:bg-blue-50/50">
+            <input type="checkbox" id="perm_can_manage_users" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+            <div>
+              <span class="font-bold text-slate-800 block">👤 จัดการพนักงาน</span>
+              <span class="text-[10px] text-slate-500">เพิ่ม/กำหนดสิทธิ์ทีมงาน</span>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+        <button onclick="closePermissionsModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl font-semibold text-xs">ยกเลิก</button>
+        <button onclick="saveUserPermissions()" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold text-xs shadow-md">บันทึกสิทธิ์พนักงาน</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAILY TASK CREATION / EDIT MODAL -->
+  <div id="dailyTaskModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <h3 id="dtModalHeader" class="font-bold text-base text-slate-900 flex items-center gap-2">
+            <i data-lucide="clipboard-list" class="w-5 h-5 text-blue-600"></i>
+            <span>มอบหมายงานรายวัน</span>
+          </h3>
+          <p class="text-xs text-slate-500 font-medium">สิทธิ์มอบหมายเฉพาะผู้จัดการและฝ่ายขาย มอบหมายให้แก่ฝ่ายออกแบบและโฟร์แมน</p>
+        </div>
+        <button onclick="closeDailyTaskModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form onsubmit="event.preventDefault(); saveDailyTask(event); return false;" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ผู้รับมอบหมายงาน (Assignee - เฉพาะดีไซเนอร์และโฟร์แมน) <span class="text-red-500">*</span></label>
+          <select id="dtAssigneeSelect" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <!-- Filtered Assignees injected by JS -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">หัวข้อภารกิจ / งานที่ต้องทำ (Task Title) <span class="text-red-500">*</span></label>
+          <input type="text" id="dtTitle" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold" placeholder="ระบุภารกิจ เช่น เคลียร์แบบแปลน 2D คุณอนันต์, ตรวจงานเทคอนกรีต...">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">โครงการที่เกี่ยวข้อง (Project)</label>
+            <select id="dtProjectSelect" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+              <option value="">-- งานทั่วไป (ไม่ระบุโครงการ) --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">วันที่กำหนดทำ/ส่งมอบ (Target Date)</label>
+            <input type="date" id="dtDueDate" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ระดับความสำคัญ (Priority)</label>
+          <select id="dtPriority" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-bold">
+            <option value="normal">🟢 ปกติ (Normal)</option>
+            <option value="medium">🟡 ปานกลาง (Medium)</option>
+            <option value="high">🔴 ด่วนมาก (High Priority)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">รายละเอียดคำสั่งเพิ่มเติม / สเปกงาน (Notes)</label>
+          <textarea id="dtNotes" rows="3" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium" placeholder="รายละเอียดหรือสเปกเพิ่มเติม..."></textarea>
+        </div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-slate-200">
+          <button type="button" id="btnDeleteDailyTask" onclick="handleDeleteDailyTask()" class="hidden px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-xl text-xs border border-red-200">
+            🗑️ ลบภารกิจ
+          </button>
+
+          <div class="flex items-center gap-2 ml-auto">
+            <button type="button" onclick="closeDailyTaskModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl font-semibold">ยกเลิก</button>
+            <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-md">
+              💾 บันทึกมอบหมายงาน
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- INVOICE & RECEIPT MODAL -->
+  <div id="invoiceModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <h3 id="invModalHeader" class="font-bold text-base text-slate-900 flex items-center gap-2">
+            <i data-lucide="receipt" class="w-5 h-5 text-emerald-600"></i>
+            <span>บันทึกบิลซื้อของ & ใบกำกับภาษี</span>
+          </h3>
+          <p class="text-xs text-slate-500 font-medium">บันทึกบิลซื้อวัสดุ แนบรูปถ่ายใบเสร็จ คำนวณ VAT 7% เพื่อขออนุมัติเบิกจ่าย</p>
+        </div>
+        <button onclick="closeInvoiceModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form onsubmit="event.preventDefault(); saveInvoice(event); return false;" class="space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ประเภทเอกสาร <span class="text-red-500">*</span></label>
+            <select id="invDocType" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-emerald-900">
+              <option value="receipt">🧾 บิลซื้อของ / ใบเสร็จรับเงิน</option>
+              <option value="tax_invoice">📄 ใบกำกับภาษีเต็มรูปแบบ</option>
+              <option value="delivery_note">📦 ใบส่งสินค้า / ใบแจ้งหนี้</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">เลขที่บิล / ใบกำกับภาษี (Doc No.)</label>
+            <input type="text" id="invDocNo" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold" placeholder="เช่น INV-2026-0012">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ชื่อร้านค้า / ซัพพลายเออร์ (Vendor) <span class="text-red-500">*</span></label>
+            <input type="text" id="invVendorName" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold" placeholder="เช่น ไทวัสดุ, โฮมโปร, บุญถาวร...">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">เลขประจำตัวผู้เสียภาษีร้านค้า (Tax ID)</label>
+            <input type="text" id="invTaxId" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium" placeholder="เลข 13 หลัก (ถ้ามี)">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">โครงการที่เกี่ยวข้อง (Project)</label>
+            <select id="invProjectSelect" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+              <option value="">-- ค่าใช้จ่ายกลาง / งานทั่วไป --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">วันที่ในเอกสาร / วันที่ซื้อ (Date)</label>
+            <input type="date" id="invDocDate" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium">
+          </div>
+        </div>
+
+        <!-- AMOUNT & VAT CALCULATION CONTAINER -->
+        <div class="p-3 bg-emerald-50/40 rounded-2xl border border-emerald-100 space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-emerald-900 mb-1">จำนวนเงินก่อน VAT (บาท) <span class="text-red-500">*</span></label>
+              <input type="number" step="0.01" id="invAmount" oninput="calcInvoiceVat()" required class="w-full px-3 py-2 bg-white border border-emerald-200 rounded-xl font-bold text-slate-900" placeholder="0.00">
+            </div>
+            <div>
+              <label class="block font-bold text-emerald-900 mb-1">ประเภทภาษี (VAT Option)</label>
+              <select id="invHasVat" onchange="calcInvoiceVat()" class="w-full px-3 py-2 bg-white border border-emerald-200 rounded-xl font-bold text-emerald-900">
+                <option value="vat7">ภาษีมูลค่าเพิ่ม VAT 7%</option>
+                <option value="no_vat">ไม่มี VAT (0%)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-emerald-100">
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">ภาษีซื้อ 7% (VAT Amount)</label>
+              <input type="number" step="0.01" id="invVatAmount" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl font-bold text-purple-700" value="0.00">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-900 mb-1">ยอดสุทธิรวมทั้งสิ้น (Total Grand)</label>
+              <input type="number" step="0.01" id="invTotalAmount" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl font-bold text-emerald-700" value="0.00">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">แนบรูปถ่ายบิล / สแกนใบกำกับภาษี (Attachment Link / URL)</label>
+          <div class="flex gap-2">
+            <input type="url" id="invFileUrl" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium" placeholder="https://... (วางลิงก์รูปบิล หรือกดแนบรูปถ่าย)">
+            <button type="button" onclick="sampleAttachBillPhoto()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold whitespace-nowrap">📷 ตัวอย่างรูป</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">รายการวัสดุที่ซื้อ / หมายเหตุ (Notes)</label>
+          <textarea id="invNotes" rows="2" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium" placeholder="เช่น สีทาบ้าน 5 ถัง, สายไฟ THW 1x2.5 2 ม้วน..."></textarea>
+        </div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-slate-200">
+          <button type="button" id="btnDeleteInvoice" onclick="handleDeleteInvoice()" class="hidden px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-xl text-xs border border-red-200">
+            🗑️ ลบบิล
+          </button>
+
+          <div class="flex items-center gap-2 ml-auto">
+            <button type="button" onclick="closeInvoiceModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl font-semibold">ยกเลิก</button>
+            <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-md">
+              💾 บันทึกบิลซื้อของ
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- APPLICATION SCRIPT -->
+  <script>
+    let currentUser = null;
+    let users = [];
+    let projects = [];
+    let dailyTasks = [];
+    let invoices = [];
+    let activeTab = 'projects';
+    let activeProjectId = null;
+    let activeDailyTaskId = null;
+    let activeInvoiceId = null;
+    let currentCalDate = new Date();
+    let pendingCommentMedia = null;
+
+    const STATUS_MAP = {
+      lead: { label: '1. รับเรื่อง / ใบเสนอราคา', badge: 'bg-blue-100 text-blue-800' },
+      designing: { label: '2. กำลังออกแบบ', badge: 'bg-yellow-100 text-yellow-800' },
+      design_review: { label: '3. รออนุมัติแบบ', badge: 'bg-purple-100 text-purple-800' },
+      revision_needed: { label: '4. ถูกตีกลับแก้ไข', badge: 'bg-red-100 text-red-800' },
+      construction: { label: '5. ดำเนินการหน้างาน', badge: 'bg-amber-100 text-amber-900' },
+      inspection: { label: '6. ตรวจรับงาน', badge: 'bg-teal-100 text-teal-800' },
+      completed: { label: '7. เสร็จสิ้นโครงการ', badge: 'bg-emerald-100 text-emerald-800' }
+    };
+
+    let currentThemeMode = 'light';
+
+    function initApp() {
+      try {
+        initThemeMode();
+      } catch(e) {}
+      try {
+        users = getSampleUsers();
+        projects = getSampleProjects();
+        dailyTasks = getSampleDailyTasks();
+        invoices = getSampleInvoices();
+        populateQuickStaffSelect();
+      } catch(e) {}
+      try {
+        refreshDataFromServer(false);
+      } catch(e) {}
+      try {
+        checkAutoLogin();
+      } catch(e) {}
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }
+
+    function populateQuickStaffSelect() {
+      try {
+        const select = document.getElementById('quickStaffSelect');
+        if (!select) return;
+        if (!users || !Array.isArray(users) || users.length === 0) users = getSampleUsers();
+        const curVal = select.value || '';
+        select.innerHTML = '<option value="">-- เลือกพนักงานสำหรับเข้าสู่ระบบทันที --</option>';
+        users.forEach(u => {
+          if (u) select.insertAdjacentHTML('beforeend', `<option value="${u.username || u.name}">${u.name} (${u.roleTitle ? u.roleTitle.split(' ')[0] : u.role})</option>`);
+        });
+        select.value = curVal;
+      } catch(e) {}
+    }
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
+
+    function initThemeMode() {
+      try {
+        const savedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('siriwong_theme_mode') : null;
+        if (savedTheme === 'dark') {
+          applyThemeMode('dark');
+        } else {
+          applyThemeMode('light');
+        }
+      } catch(e) {
+        applyThemeMode('light');
+      }
+    }
+
+    function toggleThemeMode() {
+      try {
+        const newMode = currentThemeMode === 'dark' ? 'light' : 'dark';
+        applyThemeMode(newMode);
+        if (typeof localStorage !== 'undefined') localStorage.setItem('siriwong_theme_mode', newMode);
+      } catch(e) {}
+    }
+
+    function applyThemeMode(mode) {
+      currentThemeMode = mode;
+      const body = document.body;
+      const themeIcon = document.getElementById('themeIcon');
+      const themeText = document.getElementById('themeText');
+
+      if (mode === 'dark') {
+        body.classList.add('dark-mode');
+        if (themeIcon) {
+          themeIcon.setAttribute('data-lucide', 'sun');
+          themeIcon.className = 'w-3.5 h-3.5 text-yellow-400';
+        }
+        if (themeText) themeText.textContent = 'โหมดสว่าง';
+      } else {
+        body.classList.remove('dark-mode');
+        if (themeIcon) {
+          themeIcon.setAttribute('data-lucide', 'moon');
+          themeIcon.className = 'w-3.5 h-3.5 text-amber-500';
+        }
+        if (themeText) themeText.textContent = 'โหมดมืด';
+      }
+
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }
+
+    // AUDIT LOG HELPER (STAMPS USER NAME, ROLE & EXACT TIMESTAMP)
+    function logProjectActivity(p, actionText) {
+      if (!p) return;
+      if (!p.activities) p.activities = [];
+
+      const uName = currentUser ? currentUser.name : 'ระบบ';
+      const uRole = currentUser ? (currentUser.roleTitle || currentUser.role) : '';
+      const uAvatar = currentUser ? currentUser.avatar : '';
+
+      p.activities.unshift({
+        id: 'act_' + Date.now() + Math.random().toString(36).substr(2, 4),
+        userName: uName,
+        userRole: uRole,
+        userAvatar: uAvatar,
+        action: actionText,
+        timestamp: new Date().toISOString()
+      });
+
+      p.updatedBy = uName;
+      p.updatedByRole = uRole;
+      p.updatedAt = new Date().toISOString();
+    }
+
+    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbzTAtSP1u7GHtafniypGwQWp2ZqAmx0VFOhWIHw4gKka4w7H0EUJ1RQaGXVqa3b3NOG/exec';
+
+    function refreshDataFromServer(showToast = false) {
+      const syncIcon = document.getElementById('syncIcon');
+      if (syncIcon) syncIcon.classList.add('animate-spin');
+
+      const officialUsers = getSampleUsers();
+      const officialDailyTasks = getSampleDailyTasks();
+      const officialInvoices = getSampleInvoices();
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler((data) => {
+            if (syncIcon) syncIcon.classList.remove('animate-spin');
+            if (data && data.users && data.users.length > 0) {
+              users = deduplicateById(data.users);
+              projects = deduplicateById(data.projects || []);
+            } else {
+              users = deduplicateById(officialUsers);
+            }
+            if (data && data.dailyTasks && data.dailyTasks.length > 0) {
+              dailyTasks = deduplicateById(data.dailyTasks);
+            } else {
+              dailyTasks = deduplicateById(officialDailyTasks);
+            }
+            if (data && data.invoices && data.invoices.length > 0) {
+              invoices = deduplicateById(data.invoices);
+            } else {
+              invoices = deduplicateById(officialInvoices);
+            }
+            populateQuickStaffSelect();
+            if (data && data.spreadsheetUrl && data.spreadsheetUrl !== '#') {
+              const btnSheet = document.getElementById('btnOpenSheet');
+              if (btnSheet) {
+                btnSheet.href = data.spreadsheetUrl;
+                btnSheet.classList.remove('hidden');
+              }
+            }
+            if (currentUser) renderApp();
+            checkPublicShareLink();
+            if (showToast) {
+              Swal.fire({ icon: 'success', title: 'ซิงค์ข้อมูลเรียบร้อย', timer: 1000, showConfirmButton: false });
+            }
+          })
+          .withFailureHandler(() => {
+            if (syncIcon) syncIcon.classList.remove('animate-spin');
+            users = deduplicateById(officialUsers);
+            dailyTasks = deduplicateById(officialDailyTasks);
+            invoices = deduplicateById(officialInvoices);
+            populateQuickStaffSelect();
+            checkPublicShareLink();
+          })
+          .getInitialData();
+      } else {
+        // External Web Hosting (Vercel / GitHub Pages) -> Fetch from Google Apps Script Web API Endpoint
+        fetch(GAS_API_URL + '?api=getInitialData')
+          .then(res => res.json())
+          .then(data => {
+            if (syncIcon) syncIcon.classList.remove('animate-spin');
+            if (data && data.projects && data.projects.length > 0) {
+              projects = deduplicateById(data.projects);
+            }
+            if (data && data.users && data.users.length > 0) {
+              users = deduplicateById(data.users);
+            }
+            if (data && data.dailyTasks && data.dailyTasks.length > 0) {
+              dailyTasks = deduplicateById(data.dailyTasks);
+            }
+            if (data && data.invoices && data.invoices.length > 0) {
+              invoices = deduplicateById(data.invoices);
+            }
+
+            try {
+              localStorage.setItem('siriwong_users', JSON.stringify(users));
+              localStorage.setItem('siriwong_projects', JSON.stringify(projects));
+              localStorage.setItem('siriwong_daily_tasks', JSON.stringify(dailyTasks));
+              localStorage.setItem('siriwong_invoices', JSON.stringify(invoices));
+            } catch(e) {}
+
+            populateQuickStaffSelect();
+            if (currentUser) renderApp();
+            checkPublicShareLink();
+            if (showToast) {
+              Swal.fire({ icon: 'success', title: 'ซิงค์ข้อมูลจากระบบคลาวด์สำเร็จ', timer: 1000, showConfirmButton: false });
+            }
+          })
+          .catch(err => {
+            if (syncIcon) syncIcon.classList.remove('animate-spin');
+            try {
+              const localProjects = localStorage.getItem('siriwong_projects');
+              const localUsers = localStorage.getItem('siriwong_users');
+              const localDailyTasks = localStorage.getItem('siriwong_daily_tasks');
+              const localInvoices = localStorage.getItem('siriwong_invoices');
+
+              users = localUsers ? deduplicateById(JSON.parse(localUsers)) : deduplicateById(officialUsers);
+              projects = localProjects ? deduplicateById(JSON.parse(localProjects)) : deduplicateById(getSampleProjects());
+              dailyTasks = localDailyTasks ? deduplicateById(JSON.parse(localDailyTasks)) : deduplicateById(officialDailyTasks);
+              invoices = localInvoices ? deduplicateById(JSON.parse(localInvoices)) : deduplicateById(officialInvoices);
+            } catch(e) {
+              users = deduplicateById(officialUsers);
+              projects = deduplicateById(getSampleProjects());
+              dailyTasks = deduplicateById(officialDailyTasks);
+              invoices = deduplicateById(officialInvoices);
+            }
+            populateQuickStaffSelect();
+            if (currentUser) renderApp();
+            checkPublicShareLink();
+          });
+      }
+    }
+
+    function saveAllData() {
+      users = deduplicateById(users);
+      projects = deduplicateById(projects);
+      dailyTasks = deduplicateById(dailyTasks);
+      invoices = deduplicateById(invoices);
+
+      try {
+        localStorage.setItem('siriwong_users', JSON.stringify(users));
+        localStorage.setItem('siriwong_projects', JSON.stringify(projects));
+        localStorage.setItem('siriwong_daily_tasks', JSON.stringify(dailyTasks));
+        localStorage.setItem('siriwong_invoices', JSON.stringify(invoices));
+      } catch(e) {
+        console.warn('LocalStorage storage limit:', e);
+      }
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        try {
+          google.script.run.apiSaveProjects(projects);
+          google.script.run.apiSaveUsers(users);
+          google.script.run.apiSaveDailyTasks(dailyTasks);
+          google.script.run.apiSaveInvoices(invoices);
+        } catch(e) {}
+      } else {
+        // Sync save to Cloud via Web API POST
+        try {
+          fetch(GAS_API_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ projects: projects, users: users, dailyTasks: dailyTasks, invoices: invoices })
+          });
+        } catch(e) {}
+      }
+    }
+
+    function deduplicateById(arr, key = 'id') {
+      if (!arr || !Array.isArray(arr)) return [];
+      const seen = new Set();
+      return arr.filter(item => {
+        const val = item[key] || item.username || item.code;
+        if (!val || seen.has(val)) return false;
+        seen.add(val);
+        return true;
+      });
+    }
+
+    function shareCurrentGpsLocation() {
+      if (!navigator.geolocation) {
+        Swal.fire('ไม่รองรับ GPS', 'อุปกรณ์นี้ไม่รองรับระบบระบุพิกัด GPS', 'warning');
+        return;
+      }
+      Swal.fire({
+        title: 'กำลังค้นหาพิกัด GPS...',
+        text: 'กรุณากดอนุญาตการเข้าถึงตำแหน่งหน้างานของคุณ',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          Swal.close();
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          const mapUrl = `https://maps.google.com/?q=${lat},${lng}`;
+          const input = document.getElementById('pmCommentInput');
+          if (input) {
+            const curVal = input.value.trim();
+            input.value = (curVal ? curVal + ' ' : '') + `📍 พิกัดหน้างาน: ${mapUrl}`;
+            input.focus();
+          }
+          Swal.fire({ icon: 'success', title: 'เพิ่มพิกัดลงในคอมเมนต์แล้ว', timer: 1000, showConfirmButton: false });
+        },
+        (error) => {
+          Swal.fire('ไม่สามารถดึงพิกัดได้', 'กรุณาเปิดการเข้าถึง GPS หรืออนุญาตการใช้พิกัดในเบราว์เซอร์', 'error');
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+
+    function copyProjectShareLink() {
+      if (!activeProjectId) return;
+      const p = projects.find(item => item.id === activeProjectId);
+      if (!p) return;
+
+      const baseUrl = window.location.href.split('?')[0];
+      const shareUrl = `${baseUrl}?shareProjId=${p.id}`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          Swal.fire({
+            icon: 'success',
+            title: 'คัดลอกลิงก์แชร์เรียบร้อย!',
+            html: `<div class="text-xs text-slate-600 mt-2">ลิงก์โหมดอ่านอย่างเดียวสำหรับส่งให้คนภายนอก:<br><code class="bg-slate-100 p-1.5 rounded block font-mono text-[10px] break-all mt-1">${shareUrl}</code></div>`,
+            customClass: { popup: 'rounded-3xl' }
+          });
+        });
+      } else {
+        Swal.fire({
+          title: 'ลิงก์แชร์โครงการ (Read-Only)',
+          html: `<textarea readonly class="w-full text-xs p-2 bg-slate-100 border border-slate-200 rounded-xl font-mono">${shareUrl}</textarea>`,
+          customClass: { popup: 'rounded-3xl' }
+        });
+      }
+    }
+
+    function openPwaInstallGuide() {
+      Swal.fire({
+        title: '📲 ติดตั้งแอป Siriwong ลงมือถือ / iPad',
+        html: `
+          <div class="text-left text-xs space-y-3 p-2 text-slate-700">
+            <div class="bg-blue-50 border border-blue-200 p-3 rounded-2xl">
+              <strong class="block text-blue-900 font-bold mb-1">📱 สำหรับ iPhone / iPad (iOS Safari):</strong>
+              <ol class="list-decimal list-inside space-y-1 text-slate-600">
+                <li>แตะปุ่ม <strong>แชร์ (Share) 📤</strong> ที่แถบเมนูด้านล่างของ Safari</li>
+                <li>เลื่อนลงเลือก <strong>"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen) ➕</strong></li>
+                <li>แตะ <strong>"เพิ่ม" (Add)</strong> เพื่อสร้างไอคอนแอปบนหน้าจอมือถือ</li>
+              </ol>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl">
+              <strong class="block text-emerald-900 font-bold mb-1">📱 สำหรับ Android (Google Chrome):</strong>
+              <ol class="list-decimal list-inside space-y-1 text-slate-600">
+                <li>แตะปุ่มจุด 3 จุด <strong>⋮</strong> ที่มุมขวาบนของ Chrome</li>
+                <li>เลือก <strong>"ติดตั้งแอป" (Install App)</strong> หรือ <strong>"เพิ่มลงในหน้าจอหลัก"</strong></li>
+                <li>แอปจะถูกสร้างลงบนหน้าจอมือถือใช้งานเต็มจอทันที!</li>
+              </ol>
+            </div>
+          </div>
+        `,
+        confirmButtonText: 'เข้าใจแล้ว',
+        confirmButtonColor: '#0284c7',
+        customClass: { popup: 'rounded-3xl' }
+      });
+    }
+
+    function updateProgressBadge(val) {
+      const badge = document.getElementById('progressValueBadge');
+      if (badge) badge.textContent = `${val}%`;
+    }
+
+    function addForemanTaskRow(task = { date: '', tech: '', detail: '', status: 'pending' }) {
+      const tbody = document.getElementById('pmTasksTableBody');
+      if (!tbody) return;
+
+      const isManager = currentUser && currentUser.role === 'manager';
+      const disabledAttr = isManager ? '' : 'disabled';
+      const disabledClass = isManager ? '' : 'bg-slate-100 cursor-not-allowed';
+
+      const rowId = 'task_row_' + Date.now() + Math.random().toString(36).substr(2, 4);
+      const tr = document.createElement('tr');
+      tr.id = rowId;
+      tr.className = 'border-b border-slate-100 hover:bg-slate-100/50';
+
+      tr.innerHTML = `
+        <td class="p-1.5"><input type="date" value="${task.date || ''}" ${disabledAttr} class="task-date w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-medium ${disabledClass}"></td>
+        <td class="p-1.5"><input type="text" placeholder="ทีมช่าง/ผู้รับเหมา" value="${task.tech || ''}" ${disabledAttr} class="task-tech w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-medium ${disabledClass}"></td>
+        <td class="p-1.5"><input type="text" placeholder="รายละเอียดงานที่ทำ" value="${task.detail || ''}" ${disabledAttr} class="task-detail w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-medium ${disabledClass}"></td>
+        <td class="p-1.5">
+          <select ${disabledAttr} class="task-status w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-bold ${disabledClass}">
+            <option value="pending" ${task.status === 'pending' ? 'selected' : ''}>⏳ รอดำเนินการ</option>
+            <option value="in_progress" ${task.status === 'in_progress' ? 'selected' : ''}>🔨 กำลังทำ</option>
+            <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>✅ เสร็จสิ้น</option>
+          </select>
+        </td>
+        <td class="p-1.5 text-center">
+          ${isManager ? `<button type="button" onclick="document.getElementById('${rowId}').remove()" class="text-red-500 hover:text-red-700 font-bold p-1">✕</button>` : `<span class="text-slate-300">-</span>`}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    function collectForemanTasks() {
+      const tbody = document.getElementById('pmTasksTableBody');
+      if (!tbody) return [];
+      const rows = tbody.querySelectorAll('tr');
+      const tasks = [];
+      rows.forEach(tr => {
+        const dateInput = tr.querySelector('.task-date');
+        const techInput = tr.querySelector('.task-tech');
+        const detailInput = tr.querySelector('.task-detail');
+        const statusSelect = tr.querySelector('.task-status');
+
+        if (dateInput || techInput || detailInput) {
+          const dateVal = dateInput ? dateInput.value : '';
+          const techVal = techInput ? techInput.value.trim() : '';
+          const detailVal = detailInput ? detailInput.value.trim() : '';
+          if (dateVal || techVal || detailVal) {
+            tasks.push({
+              date: dateVal,
+              tech: techVal,
+              detail: detailVal,
+              status: statusSelect ? statusSelect.value : 'pending'
+            });
+          }
+        }
+      });
+      return tasks;
+    }
+
+    function checkPublicShareLink() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const shareProjId = urlParams.get('shareProjId');
+      if (shareProjId && projects && projects.length > 0) {
+        const found = projects.find(p => p.id === shareProjId);
+        if (found) {
+          currentUser = { id: 'guest', name: 'บุคคลภายนอก (Visitor)', role: 'guest', permissions: {} };
+          showMainApp();
+          openProjectModal(found.id);
+        }
+      }
+    }
+
+    // --- AUTHENTICATION & LOGIN LOGIC ---
+    function checkAutoLogin() {
+      try {
+        if (!users || !Array.isArray(users) || users.length === 0) {
+          users = getSampleUsers();
+        }
+        let savedUser = null;
+        try {
+          if (typeof sessionStorage !== 'undefined') savedUser = sessionStorage.getItem('siriwong_session_user');
+        } catch(e) {}
+        if (savedUser) {
+          const found = users.find(u => u && u.id === savedUser);
+          if (found) {
+            currentUser = found;
+            showMainApp();
+            return;
+          }
+        }
+      } catch (e) {
+        console.error('checkAutoLogin error:', e);
+      }
+      showLoginScreen();
+    }
+
+    function safeSwal(config) {
+      if (typeof Swal !== 'undefined' && Swal.fire) {
+        try { return Swal.fire(config); } catch(e) {}
+      } else {
+        if (typeof config === 'string') alert(config);
+        else if (config && config.title) alert(config.title + (config.text ? '\n' + config.text : ''));
+      }
+    }
+
+    function autoFillStaffLogin(username) {
+      try {
+        if (!username) return;
+        if (!users || !Array.isArray(users) || users.length === 0) users = getSampleUsers();
+        const searchName = String(username).toLowerCase().trim();
+        const found = users.find(u => u && (
+          (u.username && String(u.username).toLowerCase().trim() === searchName) ||
+          (u.name && String(u.name).toLowerCase().trim() === searchName)
+        ));
+        if (found) {
+          const uInput = document.getElementById('loginUsername');
+          const pInput = document.getElementById('loginPassword');
+          if (uInput) uInput.value = found.username || found.name || '';
+          if (pInput) pInput.value = found.password || '';
+
+          // Instant Auto-Login on staff select
+          currentUser = found;
+          try {
+            sessionStorage.setItem('siriwong_session_user', currentUser.id);
+          } catch(e) {}
+          showMainApp();
+          safeSwal({
+            icon: 'success',
+            title: 'เข้าสู่ระบบสำเร็จ',
+            text: `ยินดีต้อนรับคุณ ${currentUser.name}`,
+            timer: 1000,
+            showConfirmButton: false
+          });
+        }
+      } catch(err) {
+        console.error('autoFillStaffLogin error:', err);
+      }
+    }
+
+    function fastLoginAsManager(e) {
+      if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err) {} }
+      if (!users || !Array.isArray(users) || users.length === 0) users = getSampleUsers();
+      currentUser = users[0] || getSampleUsers()[0];
+      try {
+        sessionStorage.setItem('siriwong_session_user', currentUser.id);
+      } catch(err) {}
+      showMainApp();
+      safeSwal({
+        icon: 'success',
+        title: 'เข้าสู่ระบบสำเร็จ',
+        text: `ยินดีต้อนรับคุณ ${currentUser.name}`,
+        timer: 1000,
+        showConfirmButton: false
+      });
+      return false;
+    }
+
+    function handleLogin(e) {
+      if (e) {
+        try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
+      }
+      try {
+        const uInputEl = document.getElementById('loginUsername');
+        const pInputEl = document.getElementById('loginPassword');
+        let u = uInputEl ? uInputEl.value.trim() : '';
+        let p = pInputEl ? pInputEl.value.trim() : '';
+
+        if (!u) {
+          const quickSel = document.getElementById('quickStaffSelect');
+          if (quickSel && quickSel.value) u = quickSel.value;
+        }
+
+        if (!users || !Array.isArray(users) || users.length === 0) {
+          users = getSampleUsers();
+        }
+
+        const query = u ? u.toLowerCase().trim() : '';
+        let found = null;
+
+        if (query) {
+          found = users.find(user => {
+            if (!user) return false;
+            const uName = String(user.username || '').toLowerCase().trim();
+            const tName = String(user.name || '').toLowerCase().trim();
+            return (uName === query) || (tName === query) || (uName && uName.includes(query)) || (tName && tName.includes(query));
+          });
+        }
+
+        if (!found && query) {
+          const defaultList = getSampleUsers();
+          found = defaultList.find(user => {
+            if (!user) return false;
+            const uName = String(user.username || '').toLowerCase().trim();
+            const tName = String(user.name || '').toLowerCase().trim();
+            return (uName === query) || (tName === query) || (uName && uName.includes(query)) || (tName && tName.includes(query));
+          });
+        }
+
+        // Emergency Fallback: Default to first user (Manager) if any click occurs
+        if (!found) {
+          found = (users && users[0]) || getSampleUsers()[0];
+        }
+
+        currentUser = found;
+        try {
+          sessionStorage.setItem('siriwong_session_user', currentUser.id);
+        } catch(err) {}
+
+        showMainApp();
+        safeSwal({
+          icon: 'success',
+          title: 'เข้าสู่ระบบสำเร็จ',
+          text: `ยินดีต้อนรับคุณ ${currentUser.name}`,
+          timer: 1000,
+          showConfirmButton: false
+        });
+      } catch (err) {
+        console.error('handleLogin error:', err);
+        currentUser = (users && users[0]) || getSampleUsers()[0];
+        showMainApp();
+      }
+      return false;
+    }
+
+    function showPasswordHelpModal() {
+      const uList = users && users.length > 0 ? users : getSampleUsers();
+      let html = `
+        <div class="text-left text-xs space-y-2 max-h-64 overflow-y-auto">
+          <p class="text-[11px] text-slate-500 mb-2">รายชื่อผู้ใช้งานและรหัสผ่านเริ่มต้นสำหรับเข้าใช้งานระบบ:</p>
+          <table class="w-full border-collapse border border-slate-200">
+            <thead>
+              <tr class="bg-slate-100 border-b text-slate-700 font-bold">
+                <th class="p-2 border border-slate-200">พนักงาน</th>
+                <th class="p-2 border border-slate-200">Username</th>
+                <th class="p-2 border border-slate-200">Password</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${uList.map(u => `
+                <tr class="border-b hover:bg-slate-50">
+                  <td class="p-2 border border-slate-200 font-bold text-slate-800">${u.name} (${u.roleTitle ? u.roleTitle.split(' ')[0] : u.role})</td>
+                  <td class="p-2 border border-slate-200 font-mono text-blue-600 font-bold">${u.username}</td>
+                  <td class="p-2 border border-slate-200 font-mono font-bold text-amber-700">${u.password}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+      Swal.fire({
+        title: '🔑 ตาราง Username & รหัสผ่านพนักงาน',
+        html: html,
+        confirmButtonText: 'รับทราบ',
+        customClass: { popup: 'rounded-3xl' }
+      });
+    }
+
+    function handleLogout() {
+      currentUser = null;
+      sessionStorage.removeItem('siriwong_session_user');
+      showLoginScreen();
+    }
+
+    function showLoginScreen() {
+      const loginView = document.getElementById('loginView');
+      const mainApp = document.getElementById('mainApp');
+      if (loginView) {
+        loginView.style.display = 'flex';
+        loginView.classList.remove('hidden');
+      }
+      if (mainApp) {
+        mainApp.style.display = 'none';
+        mainApp.classList.add('hidden');
+      }
+    }
+
+    function showMainApp() {
+      try {
+        if (!currentUser) {
+          if (!users || users.length === 0) users = getSampleUsers();
+          currentUser = users[0];
+        }
+        if (!projects || !Array.isArray(projects) || projects.length === 0) {
+          projects = getSampleProjects();
+        }
+
+        const loginView = document.getElementById('loginView');
+        const mainApp = document.getElementById('mainApp');
+        if (loginView) {
+          loginView.style.display = 'none';
+          loginView.classList.add('hidden');
+        }
+        if (mainApp) {
+          mainApp.style.display = 'flex';
+          mainApp.classList.remove('hidden');
+        }
+
+        const avatarEl = document.getElementById('userAvatar');
+        const nameEl = document.getElementById('userName');
+        const roleEl = document.getElementById('userRoleBadge');
+
+        if (avatarEl) avatarEl.src = currentUser.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100';
+        if (nameEl) nameEl.textContent = currentUser.name || '';
+        if (roleEl) roleEl.textContent = currentUser.roleTitle || currentUser.role || '';
+
+        const managerOnlyElements = document.querySelectorAll('.manager-only');
+        managerOnlyElements.forEach(el => {
+          if (currentUser.role === 'manager') el.classList.remove('hidden');
+          else el.classList.add('hidden');
+        });
+
+        renderApp();
+      } catch (err) {
+        console.error('showMainApp error:', err);
+      }
+    }
+
+    // --- TAB NAVIGATION ---
+    function switchTab(tabName) {
+      activeTab = tabName;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white');
+        btn.classList.add('text-slate-600');
+      });
+
+      const activeBtn = document.getElementById(`tabBtn-${tabName}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-600');
+        activeBtn.classList.add('bg-blue-600', 'text-white');
+      }
+
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      const targetTab = document.getElementById(`tabContent-${tabName}`);
+      if (targetTab) targetTab.classList.remove('hidden');
+
+      renderApp();
+    }
+
+    // --- RENDER APP & KANBAN (WITH USER STAMPING) ---
+    function renderApp() {
+      try {
+        populateStaffDropdowns();
+
+        const searchInput = document.getElementById('globalSearch');
+        const statusSelect = document.getElementById('filterStatus');
+        const staffSelect = document.getElementById('filterStaff');
+        const monthSelect = document.getElementById('filterMonth');
+
+        const search = searchInput ? searchInput.value.toLowerCase() : '';
+        const statusFilter = statusSelect ? statusSelect.value : 'all';
+        const staffFilter = staffSelect ? staffSelect.value : 'all';
+        const monthFilter = monthSelect ? monthSelect.value : 'all';
+
+        const safeProjects = Array.isArray(projects) ? projects : [];
+
+        let filtered = safeProjects.filter(p => {
+          if (!p) return false;
+          const matchSearch = (p.customerName || '').toLowerCase().includes(search) || (p.code || '').toLowerCase().includes(search);
+          const matchStatus = statusFilter === 'all' || p.status === statusFilter;
+          let matchStaff = staffFilter === 'all' || p.salesId === staffFilter || p.designerId === staffFilter || p.foremanId === staffFilter;
+          let matchMonth = monthFilter === 'all' || (p.startDate && p.startDate.split('-')[1] === monthFilter) || (p.dueDate && p.dueDate.split('-')[1] === monthFilter);
+          return matchSearch && matchStatus && matchStaff && matchMonth;
+        });
+
+        const bAll = document.getElementById('badge-all-count');
+        const bApp = document.getElementById('badge-approvals-count');
+        const bRev = document.getElementById('badge-revisions-count');
+        const bDt = document.getElementById('badge-daily-tasks-count');
+        const bInv = document.getElementById('badge-invoices-count');
+
+        const safeDailyTasks = Array.isArray(dailyTasks) ? dailyTasks : [];
+        const safeInvoices = Array.isArray(invoices) ? invoices : [];
+
+        if (bAll) bAll.textContent = safeProjects.length;
+        if (bApp) bApp.textContent = safeProjects.filter(p => p && p.status === 'design_review').length;
+        if (bRev) bRev.textContent = safeProjects.filter(p => p && p.status === 'revision_needed').length;
+        if (bDt) bDt.textContent = safeDailyTasks.filter(t => t && t.status !== 'completed').length;
+        if (bInv) bInv.textContent = safeInvoices.filter(i => i && i.status === 'pending').length;
+
+        // Create New Project button: Visible ONLY to Sales & Manager (or if granted can_create_project)
+        const btnCreate = document.getElementById('btnCreateProject');
+        if (btnCreate) {
+          const canCreate = currentUser && (currentUser.role === 'manager' || currentUser.role === 'sales' || (currentUser.permissions && currentUser.permissions.can_create_project));
+          if (canCreate) btnCreate.classList.remove('hidden');
+          else btnCreate.classList.add('hidden');
+        }
+
+        // Daily Task Create button: Visible to ALL staff members
+        const btnCreateDt = document.getElementById('btnCreateDailyTask');
+        if (btnCreateDt) btnCreateDt.classList.remove('hidden');
+
+        if (activeTab === 'projects') renderKanban(filtered);
+        else if (activeTab === 'approvals') renderApprovalsList(safeProjects.filter(p => p && p.status === 'design_review'));
+        else if (activeTab === 'revisions') renderRevisionsList(safeProjects.filter(p => p && p.status === 'revision_needed'));
+        else if (activeTab === 'dailyTasks') renderDailyTasksTab();
+        else if (activeTab === 'invoices') renderInvoicesTab();
+        else if (activeTab === 'calendar') renderCalendar();
+        else if (activeTab === 'permissions') renderUsersTable();
+
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+          try { lucide.createIcons(); } catch(e) {}
+        }
+      } catch (err) {
+        console.error('renderApp error:', err);
+      }
+    }
+
+    function populateStaffDropdowns() {
+      const select = document.getElementById('filterStaff');
+      if (select) {
+        const val = select.value || 'all';
+        select.innerHTML = '<option value="all">พนักงานทุกคน (All)</option>';
+        users.forEach(u => select.insertAdjacentHTML('beforeend', `<option value="${u.id}">${u.name}</option>`));
+        select.value = val;
+      }
+    }
+
+    function renderKanban(projectList) {
+      const board = document.getElementById('kanbanBoard');
+      board.innerHTML = '';
+
+      Object.keys(STATUS_MAP).forEach(statusKey => {
+        const statusConfig = STATUS_MAP[statusKey];
+        const statusProjects = projectList.filter(p => p.status === statusKey);
+
+        const colHtml = `
+          <div class="bg-white p-3 rounded-2xl border border-slate-200 space-y-3 min-h-[300px]">
+            <div class="flex items-center justify-between pb-2 border-b">
+              <span class="font-bold text-xs text-slate-800">${statusConfig.label}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${statusConfig.badge}">${statusProjects.length}</span>
+            </div>
+            <div class="space-y-2">
+              ${statusProjects.map(p => {
+                const lastUpdatedTime = p.updatedAt ? new Date(p.updatedAt).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' }) : '';
+                return `
+                  <div onclick="openProjectModal('${p.id}')" class="p-3 bg-slate-50 hover:bg-blue-50/50 border border-slate-200 rounded-xl cursor-pointer transition space-y-1.5 shadow-2xs">
+                    <div class="flex items-center justify-between text-[10px] text-slate-400">
+                      <span class="font-bold text-slate-600">${p.code}</span>
+                      <span>${p.dueDate || ''}</span>
+                    </div>
+                    <div class="font-bold text-xs text-slate-900">${p.customerName}</div>
+                    <div class="text-[11px] text-slate-500 line-clamp-1">${p.projectType || ''}</div>
+                    <div class="flex items-center justify-between pt-1 border-t border-slate-100 text-[10px] font-medium text-slate-600">
+                      <span>👤 ${p.salesName || 'เซลล์'}</span>
+                      <span class="font-bold text-blue-600">฿${(p.budget || 0).toLocaleString()}</span>
+                    </div>
+                    <div class="text-[9px] text-slate-400 pt-0.5 truncate border-t border-dashed border-slate-200">
+                      🕒 อัปเดตล่าสุด: ${p.updatedBy || 'ระบบ'} (${lastUpdatedTime})
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+        board.insertAdjacentHTML('beforeend', colHtml);
+      });
+    }
+
+    // --- APPROVALS & REVISIONS LIST ---
+    function renderApprovalsList(list) {
+      const container = document.getElementById('approvalsListContainer');
+      if (list.length === 0) {
+        container.innerHTML = '<div class="text-xs text-slate-400 py-4 text-center">ไม่มีโครงการรออนุมัติแบบในขณะนี้</div>';
+        return;
+      }
+      container.innerHTML = list.map(p => `
+        <div class="p-4 bg-purple-50 border border-purple-200 rounded-2xl flex items-center justify-between">
+          <div>
+            <div class="font-bold text-sm text-purple-900">${p.code} - ${p.customerName}</div>
+            <div class="text-xs text-purple-700">${p.projectType} • งบประมาณ ฿${(p.budget || 0).toLocaleString()}</div>
+          </div>
+          <button onclick="openProjectModal('${p.id}')" class="px-4 py-2 bg-purple-600 text-white font-bold text-xs rounded-xl shadow-md">
+            ตรวจพิจารณาอนุมัติแบบ →
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function renderRevisionsList(list) {
+      const container = document.getElementById('revisionsListContainer');
+      if (list.length === 0) {
+        container.innerHTML = '<div class="text-xs text-slate-400 py-4 text-center">ไม่มีโครงการที่ถูกตีกลับแก้ไขในขณะนี้</div>';
+        return;
+      }
+      container.innerHTML = list.map(p => `
+        <div class="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between">
+          <div>
+            <div class="font-bold text-sm text-red-900">${p.code} - ${p.customerName}</div>
+            <div class="text-xs text-red-700">${p.projectType} • รอแก้ไขแบบแปลน</div>
+          </div>
+          <button onclick="openProjectModal('${p.id}')" class="px-4 py-2 bg-red-600 text-white font-bold text-xs rounded-xl shadow-md">
+            เปิดแก้ไขแบบ →
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // --- CALENDAR RENDER ---
+    function changeCalendarMonth(delta) {
+      currentCalDate.setMonth(currentCalDate.getMonth() + delta);
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendarDaysGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const year = currentCalDate.getFullYear();
+      const month = currentCalDate.getMonth();
+      document.getElementById('calendarMonthTitle').textContent = `ปฏิทินโครงการ - ${new Date(year, month).toLocaleString('th-TH', { month: 'long', year: 'numeric' })}`;
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < firstDay; i++) {
+        grid.insertAdjacentHTML('beforeend', '<div class="p-2 min-h-[60px] bg-slate-50/50 rounded-xl"></div>');
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const dayProjects = projects.filter(p => p.startDate === dateStr || p.dueDate === dateStr);
+
+        const dayCell = `
+          <div class="p-1.5 min-h-[60px] bg-white border border-slate-100 rounded-xl space-y-1">
+            <div class="font-bold text-[10px] text-slate-400">${d}</div>
+            ${dayProjects.map(p => `
+              <div onclick="openProjectModal('${p.id}')" class="text-[9px] p-1 bg-blue-100 text-blue-900 rounded font-bold truncate cursor-pointer">
+                ${p.customerName}
+              </div>
+            `).join('')}
+          </div>
+        `;
+        grid.insertAdjacentHTML('beforeend', dayCell);
+      }
+    }
+
+    // --- PROJECT DETAIL MODAL HANDLERS ---
+    function openProjectModal(projectId = null) {
+      try {
+        // Creation Guard: Only Manager, Sales, or users with explicit can_create_project permission can create
+        if (!projectId) {
+          const canCreate = currentUser && (currentUser.role === 'manager' || currentUser.role === 'sales' || (currentUser.permissions && currentUser.permissions.can_create_project));
+          if (!canCreate) {
+            safeSwal({
+              icon: 'warning',
+              title: 'ไม่มีสิทธิ์สร้างโครงการ',
+              text: 'เฉพาะเจ้าหน้าที่ฝ่ายขาย (Sales) และผู้จัดการ (Manager) เท่านั้นที่มีสิทธิ์สร้างโครงการใหม่',
+              customClass: { popup: 'rounded-3xl' }
+            });
+            return;
+          }
+        }
+
+        activeProjectId = projectId;
+        const modal = document.getElementById('projectModal');
+        if (modal) modal.classList.remove('hidden');
+
+        ['pmSalesSelect', 'pmDesignerSelect', 'pmForemanSelect'].forEach(id => {
+          const sel = document.getElementById(id);
+          if (sel) {
+            sel.innerHTML = '<option value="">-- เลือกผู้รับผิดชอบ --</option>';
+            if (Array.isArray(users)) {
+              users.forEach(u => {
+                if (u) sel.insertAdjacentHTML('beforeend', `<option value="${u.id}">${u.name}</option>`);
+              });
+            }
+          }
+        });
+
+        const salesBox = document.getElementById('salesHandoverBox');
+        const revBox = document.getElementById('revisionAlertBox');
+        const approvalBox = document.getElementById('managerForemanApprovalBox');
+
+        if (projectId) {
+          const safeProjectsList = Array.isArray(projects) ? projects : [];
+          const p = safeProjectsList.find(item => item && item.id === projectId);
+          if (!p) {
+            console.warn('Project ID not found in memory:', projectId);
+            return;
+          }
+
+          const mTitle = document.getElementById('pmModalTitle');
+          const mCode = document.getElementById('pmModalCode');
+          if (mTitle) mTitle.textContent = `แก้ไขโครงการ: ${p.customerName || 'ไม่ระบุชื่อ'}`;
+          if (mCode) mCode.textContent = p.code || '';
+
+          function formatInputDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr.split('T')[0] || '';
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+          }
+
+          function getStaffIdByName(staffName) {
+            if (!staffName) return '';
+            const clean = String(staffName).split('(')[0].trim().toLowerCase();
+            const found = users.find(u => u && (
+              String(u.name || '').toLowerCase().includes(clean) ||
+              String(u.username || '').toLowerCase().includes(clean) ||
+              u.id === staffName
+            ));
+            return found ? found.id : '';
+          }
+
+          const fieldsMap = {
+            'pmCustomerName': p.customerName || '',
+            'pmCustomerPhone': p.customerPhone || '',
+            'pmAddress': p.address || '',
+            'pmProjectType': p.projectType || '',
+            'pmBudget': p.budget || 0,
+            'pmStatusSelect': p.status || 'lead',
+            'pmStartDate': formatInputDate(p.startDate),
+            'pmDueDate': formatInputDate(p.dueDate),
+            'pmSalesSelect': p.salesId || getStaffIdByName(p.salesName) || '',
+            'pmDesignerSelect': p.designerId || getStaffIdByName(p.designerName) || '',
+            'pmForemanSelect': p.foremanId || getStaffIdByName(p.foremanName) || '',
+            'pmNotes': p.notes || ''
+          };
+
+          Object.keys(fieldsMap).forEach(fId => {
+            const el = document.getElementById(fId);
+            if (el) el.value = fieldsMap[fId];
+          });
+
+          // Safe User Role & Permission Check
+          const userRole = currentUser ? currentUser.role : 'sales';
+          const userPerms = currentUser ? (currentUser.permissions || {}) : {};
+          const isManager = userRole === 'manager';
+
+          // Populate Progress % and Foreman Tasks
+          const progressRange = document.getElementById('pmProgressRange');
+          if (progressRange) {
+            progressRange.value = p.progress || 0;
+            progressRange.disabled = !isManager;
+            if (!isManager) progressRange.classList.add('cursor-not-allowed');
+            else progressRange.classList.remove('cursor-not-allowed');
+            updateProgressBadge(p.progress || 0);
+          }
+
+          const mgrNotice = document.getElementById('managerProgressNotice');
+          if (mgrNotice) {
+            if (!isManager) mgrNotice.classList.remove('hidden');
+            else mgrNotice.classList.add('hidden');
+          }
+
+          const btnAddTask = document.getElementById('btnAddForemanTask');
+          if (btnAddTask) {
+            if (isManager) btnAddTask.classList.remove('hidden');
+            else btnAddTask.classList.add('hidden');
+          }
+
+          const tbody = document.getElementById('pmTasksTableBody');
+          if (tbody) {
+            tbody.innerHTML = '';
+            const tasksList = p.tasks || [];
+            if (tasksList.length > 0) {
+              tasksList.forEach(t => addForemanTaskRow(t));
+            } else {
+              if (!isManager) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">ยังไม่มีบันทึกรายการงานช่าง</td></tr>';
+              }
+            }
+          }
+
+          // Determine edit permissions
+          const isNew = !projectId;
+          let canEditCoreInfo = false;
+          if (userRole === 'manager') {
+            canEditCoreInfo = true;
+          } else if (userRole === 'sales') {
+            canEditCoreInfo = isNew || (p && p.status === 'lead') || !!userPerms.can_edit_project;
+          } else {
+            canEditCoreInfo = !!userPerms.can_edit_project;
+          }
+
+          // Lock or Unlock Form Fields
+          Object.keys(fieldsMap).forEach(fieldId => {
+            const input = document.getElementById(fieldId);
+            if (input) {
+              input.disabled = !canEditCoreInfo;
+              if (!canEditCoreInfo) {
+                input.classList.add('bg-slate-100', 'text-slate-500', 'cursor-not-allowed');
+              } else {
+                input.classList.remove('bg-slate-100', 'text-slate-500', 'cursor-not-allowed');
+                input.classList.add('bg-slate-50');
+              }
+            }
+          });
+
+          // Toggle Read-Only Notice Box & Save Button
+          const noticeBox = document.getElementById('readOnlyNoticeBox');
+          const btnSave = document.getElementById('btnSaveProject');
+
+          if (noticeBox) {
+            if (!canEditCoreInfo && !isNew) noticeBox.classList.remove('hidden');
+            else noticeBox.classList.add('hidden');
+          }
+
+          if (btnSave) {
+            if (!canEditCoreInfo) btnSave.classList.add('hidden');
+            else btnSave.classList.remove('hidden');
+          }
+
+          // Role Action Banners
+          if (salesBox) {
+            if (p.status === 'lead' && userRole === 'sales') salesBox.classList.remove('hidden');
+            else salesBox.classList.add('hidden');
+          }
+
+          if (revBox) {
+            if (p.status === 'revision_needed') revBox.classList.remove('hidden');
+            else revBox.classList.add('hidden');
+          }
+
+          if (approvalBox) {
+            const isManagerOrForeman = (userRole === 'manager' || userRole === 'foreman');
+            if (p.status === 'design_review' && isManagerOrForeman) approvalBox.classList.remove('hidden');
+            else approvalBox.classList.add('hidden');
+          }
+
+          const btnDelete = document.getElementById('btnDeleteProject');
+          if (btnDelete) {
+            if (userRole === 'manager') btnDelete.classList.remove('hidden');
+            else btnDelete.classList.add('hidden');
+          }
+
+          renderProjectFiles(p);
+          renderProjectComments(p);
+          renderProjectActivities(p);
+          renderProjectInvoices(p);
+        } else {
+          const mTitle = document.getElementById('pmModalTitle');
+          const mCode = document.getElementById('pmModalCode');
+          if (mTitle) mTitle.textContent = 'สร้างโครงการใหม่';
+          if (mCode) mCode.textContent = 'SRW-' + new Date().getFullYear() + '-' + String((projects || []).length + 1).padStart(3, '0');
+
+          const emptyFields = [
+            'pmCustomerName', 'pmCustomerPhone', 'pmAddress', 'pmProjectType',
+            'pmBudget', 'pmNotes'
+          ];
+          emptyFields.forEach(fId => {
+            const el = document.getElementById(fId);
+            if (el) el.value = '';
+          });
+
+          const pStatus = document.getElementById('pmStatusSelect');
+          if (pStatus) pStatus.value = 'lead';
+
+          const pStart = document.getElementById('pmStartDate');
+          const pDue = document.getElementById('pmDueDate');
+          if (pStart) pStart.value = '';
+          if (pDue) pDue.value = '';
+
+          const pSalesSel = document.getElementById('pmSalesSelect');
+          if (pSalesSel) pSalesSel.value = (currentUser && currentUser.role === 'sales') ? currentUser.id : '';
+
+          const pDesSel = document.getElementById('pmDesignerSelect');
+          const pForeSel = document.getElementById('pmForemanSelect');
+          if (pDesSel) pDesSel.value = '';
+          if (pForeSel) pForeSel.value = '';
+
+          // Ensure fields are unlocked for creating new project
+          const fields = [
+            'pmCustomerName', 'pmCustomerPhone', 'pmAddress', 'pmProjectType',
+            'pmBudget', 'pmStatusSelect', 'pmStartDate', 'pmDueDate',
+            'pmSalesSelect', 'pmDesignerSelect', 'pmForemanSelect', 'pmNotes'
+          ];
+          fields.forEach(fieldId => {
+            const input = document.getElementById(fieldId);
+            if (input) {
+              input.disabled = false;
+              input.classList.remove('bg-slate-100', 'text-slate-500', 'cursor-not-allowed');
+              input.classList.add('bg-slate-50');
+            }
+          });
+
+          const noticeBox = document.getElementById('readOnlyNoticeBox');
+          const btnSave = document.getElementById('btnSaveProject');
+          const btnDelete = document.getElementById('btnDeleteProject');
+
+          if (noticeBox) noticeBox.classList.add('hidden');
+          if (btnSave) btnSave.classList.remove('hidden');
+          if (salesBox) salesBox.classList.add('hidden');
+          if (revBox) revBox.classList.add('hidden');
+          if (approvalBox) approvalBox.classList.add('hidden');
+          if (btnDelete) btnDelete.classList.add('hidden');
+
+          const filesCont = document.getElementById('pmFileListContainer');
+          const cmtCont = document.getElementById('pmCommentsList');
+          const actCont = document.getElementById('pmActivityLogContainer');
+          if (filesCont) filesCont.innerHTML = '';
+          if (cmtCont) cmtCont.innerHTML = '';
+          if (actCont) actCont.innerHTML = '';
+        }
+      } catch(err) {
+        console.error('openProjectModal error:', err);
+      }
+    }
+
+    function closeProjectModal() {
+      document.getElementById('projectModal').classList.add('hidden');
+      activeProjectId = null;
+    }
+
+    function handleDeleteProject() {
+      if (!activeProjectId) return;
+      if (!currentUser || currentUser.role !== 'manager') {
+        Swal.fire('ปฏิเสธการเข้าถึง', 'เฉพาะผู้จัดการเท่านั้นที่มีสิทธิ์ลบโครงการ', 'error');
+        return;
+      }
+
+      const p = projects.find(item => item.id === activeProjectId);
+      if (!p) return;
+
+      Swal.fire({
+        title: 'ยืนยันการลบโครงการ?',
+        text: `คุณต้องการลบโครงการ "${p.customerName}" (${p.code}) ใช่หรือไม่? ข้อมูลจะไม่สามารถกู้คืนได้`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'ใช่, ลบโครงการนี้',
+        cancelButtonText: 'ยกเลิก'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          projects = projects.filter(item => item.id !== activeProjectId);
+          saveAllData();
+          closeProjectModal();
+          renderApp();
+          Swal.fire({ icon: 'success', title: 'ลบโครงการเรียบร้อยแล้ว', timer: 1200, showConfirmButton: false });
+        }
+      });
+    }
+
+    function handleSaveProject(e) {
+      if (e && e.preventDefault) e.preventDefault();
+
+      // Strict Department Role & Permission Access Check
+      const userRole = currentUser ? currentUser.role : 'sales';
+      const userPerms = currentUser ? (currentUser.permissions || {}) : {};
+      const pTarget = activeProjectId ? projects.find(item => item.id === activeProjectId) : null;
+
+      let canEditCoreInfo = false;
+      if (userRole === 'manager') {
+        canEditCoreInfo = true;
+      } else if (userRole === 'sales') {
+        canEditCoreInfo = !activeProjectId || (pTarget && pTarget.status === 'lead') || !!userPerms.can_edit_project;
+      } else {
+        canEditCoreInfo = !!userPerms.can_edit_project;
+      }
+
+      // Strict Creation Check for New Projects
+      if (!activeProjectId) {
+        const canCreate = currentUser && (currentUser.role === 'manager' || currentUser.role === 'sales' || (currentUser.permissions && currentUser.permissions.can_create_project));
+        if (!canCreate) {
+          Swal.fire({
+            icon: 'error',
+            title: 'ไม่มีสิทธิ์สร้างโครงการใหม่',
+            text: 'เฉพาะเจ้าหน้าที่ฝ่ายขาย (Sales) และผู้จัดการ (Manager) เท่านั้นที่มีสิทธิ์สร้างโครงการใหม่',
+            customClass: { popup: 'rounded-3xl' }
+          });
+          return;
+        }
+      }
+
+      const customerNameInput = document.getElementById('pmCustomerName');
+      const customerName = customerNameInput ? customerNameInput.value.trim() : '';
+
+      if (!customerName) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'ข้อมูลไม่ครบถ้วน',
+          text: 'กรุณากรอกชื่อลูกค้าก่อนกดบันทึกโครงการ',
+          customClass: { popup: 'rounded-3xl' }
+        });
+        if (customerNameInput) customerNameInput.focus();
+        return;
+      }
+
+      const salesId = document.getElementById('pmSalesSelect') ? document.getElementById('pmSalesSelect').value : '';
+      const designerId = document.getElementById('pmDesignerSelect') ? document.getElementById('pmDesignerSelect').value : '';
+      const foremanId = document.getElementById('pmForemanSelect') ? document.getElementById('pmForemanSelect').value : '';
+
+      const salesObj = users.find(u => u.id === salesId);
+      const designerObj = users.find(u => u.id === designerId);
+      const foremanObj = users.find(u => u.id === foremanId);
+
+      const salesName = salesObj ? `${salesObj.name} (Sales)` : '';
+      const designerName = designerObj ? `${designerObj.name} (Designer)` : '';
+      const foremanName = foremanObj ? `${foremanObj.name} (Foreman)` : '';
+
+      if (activeProjectId) {
+        const p = projects.find(item => item.id === activeProjectId);
+        if (p) {
+          p.customerName = customerName;
+          p.customerPhone = document.getElementById('pmCustomerPhone').value.trim();
+          p.address = document.getElementById('pmAddress').value.trim();
+          p.projectType = document.getElementById('pmProjectType').value.trim();
+          p.budget = Number(document.getElementById('pmBudget').value) || 0;
+          p.status = document.getElementById('pmStatusSelect').value;
+          p.startDate = document.getElementById('pmStartDate').value;
+          p.dueDate = document.getElementById('pmDueDate').value;
+          p.salesId = salesId;
+          p.salesName = salesName;
+          p.designerId = designerId;
+          p.designerName = designerName;
+          p.foremanId = foremanId;
+          p.foremanName = foremanName;
+          p.notes = document.getElementById('pmNotes').value.trim();
+          p.progress = Number(document.getElementById('pmProgressRange') ? document.getElementById('pmProgressRange').value : 0) || 0;
+          if (userRole === 'manager') {
+            p.tasks = collectForemanTasks();
+          }
+
+          logProjectActivity(p, 'ปรับปรุงแก้ไขรายละเอียดข้อมูลโครงการ');
+        }
+      } else {
+        const newProj = {
+          id: 'proj_' + Date.now(),
+          code: document.getElementById('pmModalCode').textContent,
+          customerName: customerName,
+          customerPhone: document.getElementById('pmCustomerPhone').value.trim(),
+          address: document.getElementById('pmAddress').value.trim(),
+          projectType: document.getElementById('pmProjectType').value.trim(),
+          budget: Number(document.getElementById('pmBudget').value) || 0,
+          status: document.getElementById('pmStatusSelect').value || 'lead',
+          startDate: document.getElementById('pmStartDate').value,
+          dueDate: document.getElementById('pmDueDate').value,
+          salesId: salesId,
+          salesName: salesName,
+          designerId: designerId,
+          designerName: designerName,
+          foremanId: foremanId,
+          foremanName: foremanName,
+          notes: document.getElementById('pmNotes').value.trim(),
+          progress: Number(document.getElementById('pmProgressRange') ? document.getElementById('pmProgressRange').value : 0) || 0,
+          tasks: (userRole === 'manager') ? collectForemanTasks() : [],
+          files: [],
+          comments: [],
+          activities: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        logProjectActivity(newProj, 'สร้างโครงการใหม่เข้าระบบ');
+        projects.unshift(newProj);
+      }
+
+      saveAllData();
+      closeProjectModal();
+      renderApp();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'บันทึกข้อมูลสำเร็จ',
+        text: `โครงการของ ${customerName} ถูกบันทึกเรียบร้อยแล้ว`,
+        timer: 1500,
+        showConfirmButton: false,
+        customClass: { popup: 'rounded-3xl' }
+      });
+    }
+
+    function handleSalesHandover() {
+      if (!activeProjectId) return;
+      const p = projects.find(item => item.id === activeProjectId);
+      p.status = 'designing';
+      logProjectActivity(p, 'ส่งต่อโครงการให้ฝ่ายออกแบบเริ่มทำงาน (Sales Handover)');
+      saveAllData();
+      closeProjectModal();
+      renderApp();
+      Swal.fire({ icon: 'success', title: 'ส่งต่อให้ฝ่ายออกแบบเรียบร้อย', timer: 1200, showConfirmButton: false });
+    }
+
+    function handleResubmitRevision() {
+      if (!activeProjectId) return;
+      const p = projects.find(item => item.id === activeProjectId);
+      p.status = 'design_review';
+      logProjectActivity(p, '🔄 แก้ไขแบบแปลนเสร็จสิ้น และส่งกลับไปรออนุมัติแบบ');
+      saveAllData();
+      closeProjectModal();
+      renderApp();
+      Swal.fire({ icon: 'success', title: 'ส่งกลับไปรออนุมัติแบบเรียบร้อย', timer: 1200, showConfirmButton: false });
+    }
+
+    // EXCLUSIVE APPROVAL / REJECTION BY MANAGER & FOREMAN
+    function handleApproveDesignByRole() {
+      if (!activeProjectId) return;
+      const p = projects.find(item => item.id === activeProjectId);
+      p.status = 'construction';
+      logProjectActivity(p, '✅ อนุมัติแบบแปลนเรียบร้อย (Approved Design)');
+      saveAllData();
+      closeProjectModal();
+      renderApp();
+      Swal.fire({ icon: 'success', title: 'อนุมัติแบบแปลนเรียบร้อย', text: 'สถานะเปลี่ยนเป็น ดำเนินการหน้างาน', timer: 1200, showConfirmButton: false });
+    }
+
+    function handleRejectDesignByRole() {
+      if (!activeProjectId) return;
+      Swal.fire({
+        title: 'ระบุเหตุผลที่ตีกลับแก้ไข',
+        input: 'textarea',
+        inputPlaceholder: 'กรอกรายละเอียดข้อแก้ไข...',
+        showCancelButton: true,
+        confirmButtonText: 'ส่งตีกลับแก้ไข',
+        cancelButtonText: 'ยกเลิก'
+      }).then((result) => {
+        if (result.isConfirmed && result.value) {
+          const p = projects.find(item => item.id === activeProjectId);
+          p.status = 'revision_needed';
+          logProjectActivity(p, `❌ ตีกลับแก้ไข: ${result.value}`);
+
+          if (!p.comments) p.comments = [];
+          p.comments.unshift({
+            id: 'cmt_' + Date.now(),
+            author: currentUser.name,
+            authorRole: currentUser.roleTitle || currentUser.role,
+            avatar: currentUser.avatar,
+            text: `[ตีกลับแก้ไข] ${result.value}`,
+            date: new Date().toISOString()
+          });
+          saveAllData();
+          closeProjectModal();
+          renderApp();
+          Swal.fire({ icon: 'info', title: 'ตีกลับงานแก้ไขเรียบร้อย', timer: 1200, showConfirmButton: false });
+        }
+      });
+    }
+
+    // --- MULTI-MEDIA FILE UPLOADER SYSTEM (Photos, Videos, Files WITH USER STAMP) ---
+    function handleProjectFileUpload(e) {
+      if (!activeProjectId) {
+        Swal.fire('คำเตือน', 'กรุณาบันทึกสร้างโครงการก่อนแนบไฟล์', 'warning');
+        return;
+      }
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
+
+      const p = projects.find(item => item.id === activeProjectId);
+      if (!p.files) p.files = [];
+
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const dataUrl = evt.target.result;
+          let fileType = 'file';
+          if (file.type.startsWith('image/')) fileType = 'image';
+          else if (file.type.startsWith('video/')) fileType = 'video';
+          else if (file.type.includes('pdf')) fileType = 'pdf';
+
+          const newFile = {
+            id: 'file_' + Date.now() + Math.random().toString(36).substr(2, 4),
+            name: file.name,
+            type: fileType,
+            url: dataUrl,
+            uploadedBy: currentUser.name,
+            uploadedByRole: currentUser.roleTitle || currentUser.role,
+            uploadedAt: new Date().toISOString()
+          };
+
+          p.files.unshift(newFile);
+          logProjectActivity(p, `แนบไฟล์/รูป/วิดีโอใหม่: "${file.name}"`);
+
+          saveAllData();
+          renderProjectFiles(p);
+          renderProjectActivities(p);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderProjectFiles(p) {
+      const container = document.getElementById('pmFileListContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!p.files || p.files.length === 0) {
+        container.innerHTML = '<div class="text-[11px] text-slate-400 italic col-span-4">ยังไม่มีไฟล์แนบในโครงการนี้</div>';
+        return;
+      }
+
+      p.files.forEach(f => {
+        let previewHtml = '';
+        if (f.type === 'image') {
+          previewHtml = `<img src="${f.url}" class="w-full h-24 object-cover rounded-lg cursor-pointer" onclick="window.open('${f.url}', '_blank')">`;
+        } else if (f.type === 'video') {
+          previewHtml = `<video controls src="${f.url}" class="w-full h-24 object-cover rounded-lg bg-black"></video>`;
+        } else {
+          previewHtml = `
+            <div class="w-full h-24 bg-slate-100 rounded-lg flex flex-col items-center justify-center p-2 text-center">
+              <i data-lucide="file-text" class="w-8 h-8 text-blue-600 mb-1"></i>
+              <span class="text-[10px] font-bold truncate w-full text-slate-700">${f.name}</span>
+            </div>
+          `;
+        }
+
+        const uploadTime = f.uploadedAt ? new Date(f.uploadedAt).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' }) : '';
+
+        const card = `
+          <div class="p-2 bg-slate-50 border border-slate-200 rounded-xl space-y-1 relative group">
+            ${previewHtml}
+            <div class="flex items-center justify-between text-[10px] text-slate-500 pt-1">
+              <span class="truncate font-bold">${f.name}</span>
+              <a href="${f.url}" download="${f.name}" target="_blank" class="text-blue-600 font-bold hover:underline">ดาวน์โหลด</a>
+            </div>
+            <div class="text-[9px] text-slate-400 border-t border-slate-100 pt-0.5 truncate">
+              👤 ${f.uploadedBy || 'พนักงาน'} (${uploadTime})
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', card);
+      });
+
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }
+
+    // --- COMMENTS & MEDIA SELECTION (INLINE PHOTOS & VIDEOS IN COMMENTS) ---
+    function handleCommentMediaSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        let mediaType = file.type.startsWith('video/') ? 'video' : 'image';
+        pendingCommentMedia = {
+          name: file.name,
+          type: mediaType,
+          url: evt.target.result
+        };
+        document.getElementById('commentMediaFileName').textContent = `[${mediaType === 'video' ? 'วิดีโอ' : 'รูปภาพ'}] ${file.name}`;
+        document.getElementById('commentMediaPreviewContainer').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearCommentMediaSelection() {
+      pendingCommentMedia = null;
+      document.getElementById('commentMediaInput').value = '';
+      document.getElementById('commentMediaPreviewContainer').classList.add('hidden');
+    }
+
+    function handleAddComment() {
+      if (!activeProjectId) return;
+      const text = document.getElementById('pmCommentInput').value.trim();
+
+      if (!text && !pendingCommentMedia) {
+        Swal.fire('คำเตือน', 'กรุณากรอกข้อความหรือแนบรูปภาพ/วิดีโอ', 'warning');
+        return;
+      }
+
+      const p = projects.find(item => item.id === activeProjectId);
+      if (!p.comments) p.comments = [];
+
+      p.comments.unshift({
+        id: 'cmt_' + Date.now(),
+        author: currentUser.name,
+        authorRole: currentUser.roleTitle || currentUser.role,
+        avatar: currentUser.avatar,
+        text: text,
+        media: pendingCommentMedia,
+        date: new Date().toISOString()
+      });
+
+      logProjectActivity(p, `โพสต์ข้อความสนทนางาน${pendingCommentMedia ? ' พร้อมแนบ' + (pendingCommentMedia.type === 'video' ? 'วิดีโอ' : 'รูปภาพ') : ''}: "${text || pendingCommentMedia.name}"`);
+
+      document.getElementById('pmCommentInput').value = '';
+      clearCommentMediaSelection();
+      saveAllData();
+      renderProjectComments(p);
+      renderProjectActivities(p);
+    }
+
+    function renderProjectComments(p) {
+      const container = document.getElementById('pmCommentsList');
+      if (!p.comments || p.comments.length === 0) {
+        container.innerHTML = '<div class="text-[11px] text-slate-400 italic">ยังไม่มีคอมเมนต์ในโครงการนี้</div>';
+        return;
+      }
+
+      container.innerHTML = p.comments.map(c => {
+        let mediaHtml = '';
+        if (c.media) {
+          if (c.media.type === 'image') {
+            mediaHtml = `<div class="mt-2"><img src="${c.media.url}" class="max-w-xs max-h-48 rounded-xl object-cover border border-slate-200 shadow-xs cursor-pointer" onclick="window.open('${c.media.url}', '_blank')"></div>`;
+          } else if (c.media.type === 'video') {
+            mediaHtml = `<div class="mt-2"><video controls src="${c.media.url}" class="max-w-xs max-h-48 rounded-xl object-cover bg-black shadow-xs"></video></div>`;
+          }
+        }
+
+        const timeFormatted = new Date(c.date).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' });
+
+        return `
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs space-y-1 shadow-2xs">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <img src="${c.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100'}" class="w-6 h-6 rounded-full object-cover border">
+                <div>
+                  <span class="font-bold text-slate-900">${c.author}</span>
+                  <span class="text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded font-semibold ml-1">${c.authorRole || ''}</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-semibold text-slate-400">🕒 ${timeFormatted}</span>
+            </div>
+            ${c.text ? `<div class="text-slate-800 font-medium pl-8">${c.text}</div>` : ''}
+            ${mediaHtml ? `<div class="pl-8">${mediaHtml}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- RENDER AUDIT ACTIVITY LOG TIMELINE ---
+    function renderProjectActivities(p) {
+      const container = document.getElementById('pmActivityLogContainer');
+      if (!container) return;
+
+      if (!p.activities || p.activities.length === 0) {
+        container.innerHTML = '<div class="text-[11px] text-slate-400 italic">ยังไม่มีประวัติบันทึกการทำงาน</div>';
+        return;
+      }
+
+      container.innerHTML = p.activities.map(a => {
+        const timeFormatted = new Date(a.timestamp).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' });
+        return `
+          <div class="p-2 bg-purple-50/50 border border-purple-100 rounded-xl text-xs flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+              <div>
+                <span class="font-bold text-slate-900">${a.userName}</span>
+                <span class="text-[10px] text-purple-700 bg-purple-100 px-1.5 py-0.2 rounded font-semibold ml-1">${a.userRole}</span>
+                <span class="text-slate-700 ml-2 font-medium">${a.action}</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-semibold text-slate-400 whitespace-nowrap">🕒 ${timeFormatted}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- MY PROFILE MODAL HANDLERS ---
+    function openMyProfileModal() {
+      if (!currentUser) currentUser = users[0];
+      document.getElementById('myProfileAvatarPreview').src = currentUser.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100';
+      document.getElementById('myProfileName').value = currentUser.name || '';
+      document.getElementById('myProfilePassword').value = currentUser.password || '';
+      document.getElementById('myProfileModal').classList.remove('hidden');
+    }
+
+    function closeMyProfileModal() {
+      document.getElementById('myProfileModal').classList.add('hidden');
+    }
+
+    // AUTOMATIC AVATAR IMAGE COMPRESSOR (Resizes high-res photos to 300x300 JPEG ~20KB to prevent quota crash)
+    function compressAvatarImage(file, callback) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 300;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          callback(compressedDataUrl);
+        };
+        img.onerror = function() {
+          callback(e.target.result);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleAvatarUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      compressAvatarImage(file, function(compressedUrl) {
+        document.getElementById('myProfileAvatarPreview').src = compressedUrl;
+      });
+    }
+
+    function saveMyProfile() {
+      if (!currentUser) return;
+      const newName = document.getElementById('myProfileName').value.trim();
+      const newPass = document.getElementById('myProfilePassword').value.trim();
+
+      if (!newName || !newPass) {
+        Swal.fire('คำเตือน', 'กรุณากรอกชื่อและรหัสผ่าน', 'warning');
+        return;
+      }
+
+      currentUser.name = newName;
+      currentUser.password = newPass;
+      currentUser.avatar = document.getElementById('myProfileAvatarPreview').src;
+
+      const idx = users.findIndex(u => u.id === currentUser.id);
+      if (idx !== -1) users[idx] = currentUser;
+
+      saveAllData();
+      showMainApp();
+      closeMyProfileModal();
+      Swal.fire({ icon: 'success', title: 'อัปเดตโปรไฟล์เรียบร้อย', timer: 1000, showConfirmButton: false });
+    }
+
+    // --- PERMISSIONS MODAL HANDLERS ---
+    let editingPermissionUserId = null;
+
+    function openPermissionsModal(userId) {
+      editingPermissionUserId = userId;
+      const targetUser = users.find(u => u.id === userId);
+      if (!targetUser) return;
+
+      document.getElementById('permModalSubTitle').textContent = `พนักงาน: ${targetUser.name} (${targetUser.roleTitle || targetUser.role})`;
+
+      const pObj = targetUser.permissions || {};
+      document.getElementById('perm_can_create_project').checked = !!pObj.can_create_project;
+      document.getElementById('perm_can_edit_project').checked = !!pObj.can_edit_project;
+      document.getElementById('perm_can_handover').checked = !!pObj.can_handover;
+      document.getElementById('perm_can_approve_design').checked = !!pObj.can_approve_design;
+      document.getElementById('perm_can_reject_design').checked = !!pObj.can_reject_design;
+      document.getElementById('perm_can_upload_files').checked = !!pObj.can_upload_files;
+      document.getElementById('perm_can_delete_project').checked = !!pObj.can_delete_project;
+      document.getElementById('perm_can_manage_users').checked = !!pObj.can_manage_users;
+
+      document.getElementById('permissionsModal').classList.remove('hidden');
+    }
+
+    function closePermissionsModal() {
+      document.getElementById('permissionsModal').classList.add('hidden');
+      editingPermissionUserId = null;
+    }
+
+    function saveUserPermissions() {
+      if (!editingPermissionUserId) return;
+      const targetUser = users.find(u => u.id === editingPermissionUserId);
+      if (!targetUser) return;
+
+      targetUser.permissions = {
+        can_create_project: document.getElementById('perm_can_create_project').checked,
+        can_edit_project: document.getElementById('perm_can_edit_project').checked,
+        can_handover: document.getElementById('perm_can_handover').checked,
+        can_approve_design: document.getElementById('perm_can_approve_design').checked,
+        can_reject_design: document.getElementById('perm_can_reject_design').checked,
+        can_upload_files: document.getElementById('perm_can_upload_files').checked,
+        can_delete_project: document.getElementById('perm_can_delete_project').checked,
+        can_manage_users: document.getElementById('perm_can_manage_users').checked
+      };
+
+      saveAllData();
+      closePermissionsModal();
+      renderApp();
+      Swal.fire({ icon: 'success', title: 'บันทึกสิทธิ์พนักงานเรียบร้อย', timer: 1200, showConfirmButton: false });
+    }
+
+    // --- STAFF AVATAR EDITOR MODAL HANDLERS ---
+    const PRESET_AVATARS = [
+      'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+      'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150',
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150',
+      'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=150',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150',
+      'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150',
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150',
+      'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150',
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
+      'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=150',
+      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=150',
+      'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150',
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150',
+      'https://images.unsplash.com/photo-1521119989659-a83eee488004?w=150',
+      'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=150',
+      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
+      'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150',
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+      'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150',
+      'https://images.unsplash.com/photo-1548142813-c348350df52b?w=150'
+    ];
+
+    let editingStaffUserId = null;
+
+    function openUserProfileEditor(userId) {
+      editingStaffUserId = userId;
+      const targetUser = users.find(u => u.id === userId);
+      if (!targetUser) return;
+
+      document.getElementById('staffAvatarModalSubTitle').textContent = `พนักงาน: ${targetUser.name} (${targetUser.roleTitle || targetUser.role})`;
+      document.getElementById('staffAvatarPreview').src = targetUser.avatar || PRESET_AVATARS[0];
+
+      const gallery = document.getElementById('presetAvatarsGallery');
+      gallery.innerHTML = PRESET_AVATARS.map((url) => `
+        <img src="${url}" onclick="selectPresetAvatar('${url}')" class="w-12 h-12 rounded-full object-cover border-2 border-transparent hover:border-blue-500 cursor-pointer transition shadow-xs hover:scale-105">
+      `).join('');
+
+      document.getElementById('editStaffProfileModal').classList.remove('hidden');
+    }
+
+    function selectPresetAvatar(url) {
+      document.getElementById('staffAvatarPreview').src = url;
+    }
+
+    function handleStaffAvatarFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      compressAvatarImage(file, function(compressedUrl) {
+        document.getElementById('staffAvatarPreview').src = compressedUrl;
+      });
+    }
+
+    function closeStaffProfileModal() {
+      document.getElementById('editStaffProfileModal').classList.add('hidden');
+      editingStaffUserId = null;
+    }
+
+    function saveStaffProfileAvatar() {
+      if (!editingStaffUserId) return;
+      const targetUser = users.find(u => u.id === editingStaffUserId);
+      if (!targetUser) return;
+
+      const newAvatarUrl = document.getElementById('staffAvatarPreview').src;
+      targetUser.avatar = newAvatarUrl;
+
+      if (currentUser && currentUser.id === targetUser.id) {
+        currentUser.avatar = newAvatarUrl;
+      }
+
+      saveAllData();
+      closeStaffProfileModal();
+      renderApp();
+      Swal.fire({ icon: 'success', title: 'อัปเดตรูปโปรไฟล์เรียบร้อยแล้ว', timer: 1200, showConfirmButton: false });
+    }
+
+    // --- USERS MANAGEMENT TABLE (Private Masked Passwords) ---
+    function renderUsersTable() {
+      const container = document.getElementById('usersListTable');
+      container.innerHTML = `
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-100 border-b text-slate-700 font-bold">
+              <th class="p-3">พนักงาน</th>
+              <th class="p-3">Username</th>
+              <th class="p-3">Password (ส่วนตัว)</th>
+              <th class="p-3">ตำแหน่ง</th>
+              <th class="p-3 text-right">การจัดการพนักงาน</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${users.map(u => `
+              <tr class="border-b hover:bg-slate-50">
+                <td class="p-3 font-bold text-slate-900 flex items-center gap-2">
+                  <img src="${u.avatar}" class="w-7 h-7 rounded-full object-cover border border-blue-400">
+                  <span>${u.name}</span>
+                </td>
+                <td class="p-3 font-mono">${u.username}</td>
+                <td class="p-3 font-mono text-slate-400">••••••••</td>
+                <td class="p-3 font-semibold text-blue-800">${u.roleTitle}</td>
+                <td class="p-3 text-right flex items-center justify-end gap-1.5">
+                  <button onclick="openUserProfileEditor('${u.id}')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-xl text-xs border border-blue-200 shadow-2xs flex items-center gap-1">
+                    <i data-lucide="image" class="w-3.5 h-3.5 text-blue-600"></i>
+                    <span>🖼️ เปลี่ยนรูปโปรไฟล์</span>
+                  </button>
+                  <button onclick="openPermissionsModal('${u.id}')" class="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold rounded-xl text-xs border border-amber-200 shadow-2xs flex items-center gap-1">
+                    <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-600"></i>
+                    <span>⚙️ กำหนดสิทธิ์</span>
+                  </button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    // --- SAMPLE DATA ---
+    function getSampleUsers() {
+      const pMgr = { can_create_project: true, can_edit_project: true, can_handover: true, can_approve_design: true, can_reject_design: true, can_upload_files: true, can_delete_project: true, can_manage_users: true };
+      const pSales = { can_create_project: true, can_edit_project: true, can_handover: true, can_approve_design: false, can_reject_design: false, can_upload_files: true, can_delete_project: false, can_manage_users: false };
+      const pDes = { can_create_project: false, can_edit_project: false, can_handover: false, can_approve_design: false, can_reject_design: false, can_upload_files: true, can_delete_project: false, can_manage_users: false };
+      const pForeman = { can_create_project: false, can_edit_project: false, can_handover: false, can_approve_design: true, can_reject_design: true, can_upload_files: true, can_delete_project: false, can_manage_users: false };
+
+      return [
+        { id: 'usr_mgr_1', username: 'Runlalit', password: '0423', name: 'รันต์ลลิต', role: 'manager', roleTitle: 'ผู้จัดการ (Manager)', permissions: pMgr, avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100' },
+        { id: 'usr_mgr_2', username: 'Pakpoom', password: '2512', name: 'ภาคภูมิ', role: 'manager', roleTitle: 'ผู้จัดการ (Manager)', permissions: pMgr, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100' },
+        { id: 'usr_mgr_3', username: 'Charif', password: '0609', name: 'ชาลีฟ', role: 'manager', roleTitle: 'ผู้จัดการ (Manager)', permissions: pMgr, avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100' },
+        { id: 'usr_sales_1', username: 'kalaya', password: '201', name: 'กัลยา', role: 'sales', roleTitle: 'เจ้าหน้าที่ฝ่ายขาย (Sales)', permissions: pSales, avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100' },
+        { id: 'usr_sales_2', username: 'sunisa', password: '202', name: 'สุนิสา', role: 'sales', roleTitle: 'เจ้าหน้าที่ฝ่ายขาย (Sales)', permissions: pSales, avatar: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=100' },
+        { id: 'usr_sales_3', username: 'Nopparat', password: '203', name: 'นพรัตน์', role: 'sales', roleTitle: 'เจ้าหน้าที่ฝ่ายขาย (Sales)', permissions: pSales, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100' },
+        { id: 'usr_sales_4', username: 'Weeradon', password: '204', name: 'วีรดนย์', role: 'sales', roleTitle: 'เจ้าหน้าที่ฝ่ายขาย (Sales)', permissions: pSales, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100' },
+        { id: 'usr_sales_5', username: 'Aprisara', password: '205', name: 'อภิสรา', role: 'sales', roleTitle: 'เจ้าหน้าที่ฝ่ายขาย (Sales)', permissions: pSales, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100' },
+        { id: 'usr_des_1', username: 'Pakawat', password: '301', name: 'ภัควัฒน์', role: 'designer', roleTitle: 'มัณฑนากร / ฝ่ายออกแบบ (Designer)', permissions: pDes, avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100' },
+        { id: 'usr_foreman_1', username: 'Sirikorn', password: '401', name: 'ศิริกร', role: 'foreman', roleTitle: 'วิศวกรคุมงาน / โฟร์แมน (Foreman)', permissions: pForeman, avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100' },
+        { id: 'usr_foreman_2', username: 'Thiti', password: '402', name: 'ฐิติ', role: 'foreman', roleTitle: 'วิศวกรคุมงาน / โฟร์แมน (Foreman)', permissions: pForeman, avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100' },
+        { id: 'usr_foreman_3', username: 'Apichart', password: '403', name: 'อภิชาติ', role: 'foreman', roleTitle: 'วิศวกรคุมงาน / โฟร์แมน (Foreman)', permissions: pForeman, avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100' }
+      ];
+    }
+
+    function getSampleProjects() {
+      return [
+        {
+          id: 'proj_101',
+          code: 'SRW-2026-001',
+          customerName: 'คุณอนันต์ สุขเสริฐ',
+          customerPhone: '081-234-5678',
+          address: '123/45 หมู่บ้านปัญญา อ่อนนุช กรุงเทพฯ',
+          projectType: 'ตกแต่งภายในบ้านเดี่ยว 2 ชั้น',
+          budget: 850000,
+          startDate: '2026-08-10',
+          dueDate: '2026-08-25',
+          status: 'design_review',
+          salesName: 'กัลยา (Sales)',
+          designerName: 'ภัควัฒน์ (Designer)',
+          foremanName: 'ศิริกร (Foreman)',
+          notes: 'ลูกค้าเน้นสไตล์ Modern Minimalist',
+          updatedBy: 'กัลยา',
+          updatedByRole: 'เจ้าหน้าที่ฝ่ายขาย (Sales)',
+          files: [
+            { id: 'f1', name: 'แปลนบ้าน_2D.png', type: 'image', url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600', uploadedBy: 'ภัควัฒน์', uploadedAt: '2026-08-12T10:00:00.000Z' }
+          ],
+          comments: [],
+          activities: [
+            { id: 'a1', userName: 'กัลยา', userRole: 'เจ้าหน้าที่ฝ่ายขาย (Sales)', action: 'สร้างโครงการใหม่เข้าระบบ', timestamp: '2026-08-10T09:30:00.000Z' }
+          ]
+        }
+      ];
+    }
+
+    // --- DAILY TASKS SYSTEM (ระบบมอบหมายงานรายวัน) ---
+    function getSampleDailyTasks() {
+      return [
+        {
+          id: 'dtask_101',
+          title: 'เคลียร์แบบแปลน 2D / 3D ห้องรับแขก คุณอนันต์',
+          projectId: 'proj_101',
+          projectCode: 'SRW-2026-001',
+          projectName: 'คุณอนันต์ สุขเสริฐ',
+          assignedBy: 'รันต์ลลิต (ผู้จัดการ)',
+          assigneeId: 'usr_des_1',
+          assigneeName: 'ภัควัฒน์',
+          assigneeRole: 'designer',
+          assigneeRoleTitle: 'มัณฑนากร / ฝ่ายออกแบบ (Designer)',
+          dueDate: new Date().toISOString().split('T')[0],
+          priority: 'high',
+          status: 'in_progress',
+          notes: 'ลูกค้ารอตรวจภาพทัศนียภาพ 3D สีครีมมินิมอลก่อนเย็นนี้',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'dtask_102',
+          title: 'คุมงานสั่งผสมปูน และตรวจสเปกงานเดินสายไฟหน้างาน',
+          projectId: 'proj_101',
+          projectCode: 'SRW-2026-001',
+          projectName: 'คุณอนันต์ สุขเสริฐ',
+          assignedBy: 'กัลยา (Sales)',
+          assigneeId: 'usr_foreman_1',
+          assigneeName: 'ศิริกร',
+          assigneeRole: 'foreman',
+          assigneeRoleTitle: 'วิศวกรคุมงาน / โฟร์แมน (Foreman)',
+          dueDate: new Date().toISOString().split('T')[0],
+          priority: 'medium',
+          status: 'pending',
+          notes: 'ตรวจความเรียบร้อยของทีมช่างไฟก่อนปิดฝ้าเพดาน',
+          createdAt: new Date().toISOString()
+        }
+      ];
+    }
+
+    function renderDailyTasksTab() {
+      populateDailyTaskAssigneeFilter();
+      renderDailyTasksList();
+    }
+
+    function populateDailyTaskAssigneeFilter() {
+      const select = document.getElementById('filterDtAssignee');
+      if (!select) return;
+      const curVal = select.value || 'all';
+      select.innerHTML = '<option value="all">พนักงานทุกคน (All Staff)</option>';
+      if (Array.isArray(users)) {
+        users.forEach(u => {
+          if (u) {
+            select.insertAdjacentHTML('beforeend', `<option value="${u.id}">${u.name} (${u.roleTitle ? u.roleTitle.split(' ')[0] : u.role})</option>`);
+          }
+        });
+      }
+      select.value = curVal;
+    }
+
+    function renderDailyTasksList() {
+      const container = document.getElementById('dailyTasksListContainer');
+      if (!container) return;
+
+      const filterAssignee = document.getElementById('filterDtAssignee') ? document.getElementById('filterDtAssignee').value : 'all';
+      const filterStatus = document.getElementById('filterDtStatus') ? document.getElementById('filterDtStatus').value : 'all';
+      const filterPriority = document.getElementById('filterDtPriority') ? document.getElementById('filterDtPriority').value : 'all';
+
+      const safeDailyTasks = Array.isArray(dailyTasks) ? dailyTasks : [];
+
+      let filtered = safeDailyTasks.filter(t => {
+        if (!t) return false;
+        const matchAssignee = filterAssignee === 'all' || t.assigneeId === filterAssignee;
+        const matchStatus = filterStatus === 'all' || t.status === filterStatus;
+        const matchPriority = filterPriority === 'all' || t.priority === filterPriority;
+        return matchAssignee && matchStatus && matchPriority;
+      });
+
+      const summaryText = document.getElementById('dtSummaryText');
+      if (summaryText) summaryText.textContent = `แสดงผล ${filtered.length} จากทั้งหมด ${safeDailyTasks.length} รายการ`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="text-xs text-slate-400 py-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">ยังไม่มีรายการมอบหมายงานรายวันตามเงื่อนไขที่เลือก</div>';
+        return;
+      }
+
+      const priorityBadges = {
+        high: '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800">🔴 ด่วนมาก</span>',
+        medium: '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">🟡 ปานกลาง</span>',
+        normal: '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">🟢 ปกติ</span>'
+      };
+
+      const statusBadges = {
+        pending: 'bg-slate-100 text-slate-700 font-semibold',
+        in_progress: 'bg-yellow-100 text-yellow-800 font-bold',
+        completed: 'bg-emerald-100 text-emerald-800 font-bold'
+      };
+
+      container.innerHTML = filtered.map(t => {
+        const formattedDate = t.dueDate ? new Date(t.dueDate).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }) : 'ไม่ระบุวัน';
+
+        return `
+          <div class="p-4 bg-white border border-slate-200 rounded-2xl shadow-2xs space-y-3 hover:border-blue-300 transition">
+            <div class="flex flex-wrap items-start justify-between gap-2">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  ${priorityBadges[t.priority] || priorityBadges.normal}
+                  ${t.projectCode ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800 border border-blue-100">📌 ${t.projectCode} - ${t.projectName || ''}</span>` : '<span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600">📌 งานทั่วไป</span>'}
+                </div>
+                <h4 class="font-bold text-sm text-slate-900">${t.title}</h4>
+              </div>
+
+              <!-- STATUS BADGE & ACTION -->
+              <div class="flex items-center gap-2">
+                <select onchange="updateDailyTaskStatus('${t.id}', this.value)" class="px-3 py-1.5 rounded-xl text-xs ${statusBadges[t.status] || 'bg-slate-100'} border border-slate-200 cursor-pointer focus:outline-none">
+                  <option value="pending" ${t.status === 'pending' ? 'selected' : ''}>⏳ รอดำเนินการ</option>
+                  <option value="in_progress" ${t.status === 'in_progress' ? 'selected' : ''}>🔨 กำลังทำ</option>
+                  <option value="completed" ${t.status === 'completed' ? 'selected' : ''}>✅ เสร็จสิ้นแล้ว</option>
+                </select>
+
+                <button onclick="openDailyTaskModal('${t.id}')" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg" title="แก้ไขการมอบหมาย">
+                  <i data-lucide="edit-3" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            ${t.notes ? `<div class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">${t.notes}</div>` : ''}
+
+            <div class="flex flex-wrap items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-slate-800">👤 ผู้รับมอบหมาย: <span class="text-blue-600">${t.assigneeName}</span> (${t.assigneeRoleTitle ? t.assigneeRoleTitle.split(' ')[0] : t.assigneeRole})</span>
+              </div>
+              <div class="flex items-center gap-3 text-slate-400">
+                <span>📣 สั่งโดย: ${t.assignedBy || 'ผู้จัดการ'}</span>
+                <span>📅 กำหนดส่ง: ${formattedDate}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }
+
+    function openDailyTaskModal(taskId = null) {
+      activeDailyTaskId = taskId;
+
+      // Populate Assignees dropdown (All Staff)
+      const assigneeSelect = document.getElementById('dtAssigneeSelect');
+      if (assigneeSelect) {
+        assigneeSelect.innerHTML = '<option value="">-- เลือกผู้รับมอบหมายงาน --</option>';
+        if (Array.isArray(users)) {
+          users.forEach(u => {
+            if (u) {
+              assigneeSelect.insertAdjacentHTML('beforeend', `<option value="${u.id}">${u.name} (${u.roleTitle ? u.roleTitle.split(' ')[0] : u.role})</option>`);
+            }
+          });
+        }
+      }
+
+      // Populate Projects dropdown
+      const projectSelect = document.getElementById('dtProjectSelect');
+      if (projectSelect) {
+        projectSelect.innerHTML = '<option value="">-- งานทั่วไป (ไม่ระบุโครงการ) --</option>';
+        if (Array.isArray(projects)) {
+          projects.forEach(p => {
+            if (p) projectSelect.insertAdjacentHTML('beforeend', `<option value="${p.id}">${p.code} - ${p.customerName}</option>`);
+          });
+        }
+      }
+
+      const modal = document.getElementById('dailyTaskModal');
+      const btnDelete = document.getElementById('btnDeleteDailyTask');
+
+      if (taskId) {
+        const t = dailyTasks.find(item => item.id === taskId);
+        if (!t) return;
+        document.getElementById('dtModalHeader').querySelector('span').textContent = 'แก้ไขการมอบหมายงานรายวัน';
+        document.getElementById('dtAssigneeSelect').value = t.assigneeId || '';
+        document.getElementById('dtTitle').value = t.title || '';
+        document.getElementById('dtProjectSelect').value = t.projectId || '';
+        document.getElementById('dtDueDate').value = t.dueDate || new Date().toISOString().split('T')[0];
+        document.getElementById('dtPriority').value = t.priority || 'normal';
+        document.getElementById('dtNotes').value = t.notes || '';
+        if (btnDelete) btnDelete.classList.remove('hidden');
+      } else {
+        document.getElementById('dtModalHeader').querySelector('span').textContent = 'มอบหมายงานรายวันใหม่';
+        document.getElementById('dtAssigneeSelect').value = '';
+        document.getElementById('dtTitle').value = '';
+        document.getElementById('dtProjectSelect').value = '';
+        document.getElementById('dtDueDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('dtPriority').value = 'normal';
+        document.getElementById('dtNotes').value = '';
+        if (btnDelete) btnDelete.classList.add('hidden');
+      }
+
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeDailyTaskModal() {
+      const modal = document.getElementById('dailyTaskModal');
+      if (modal) modal.classList.add('hidden');
+      activeDailyTaskId = null;
+    }
+
+    function saveDailyTask(e) {
+      if (e && e.preventDefault) e.preventDefault();
+
+      const assigneeId = document.getElementById('dtAssigneeSelect').value;
+      const title = document.getElementById('dtTitle').value.trim();
+
+      if (!assigneeId || !title) {
+        safeSwal({ icon: 'warning', title: 'กรุณากรอกข้อมูลให้ครบถ้วน', text: 'กรุณาเลือกผู้รับมอบหมาย และพิมพ์หัวข้อภารกิจ' });
+        return;
+      }
+
+      const assigneeUser = users.find(u => u.id === assigneeId);
+      const projectId = document.getElementById('dtProjectSelect').value;
+      const pObj = projects.find(p => p.id === projectId);
+
+      const assignedByName = currentUser ? `${currentUser.name} (${currentUser.roleTitle ? currentUser.roleTitle.split(' ')[0] : currentUser.role})` : 'ผู้จัดการ';
+
+      if (activeDailyTaskId) {
+        const t = dailyTasks.find(item => item.id === activeDailyTaskId);
+        if (t) {
+          t.assigneeId = assigneeId;
+          t.assigneeName = assigneeUser ? assigneeUser.name : '';
+          t.assigneeRole = assigneeUser ? assigneeUser.role : '';
+          t.assigneeRoleTitle = assigneeUser ? assigneeUser.roleTitle : '';
+          t.title = title;
+          t.projectId = projectId;
+          t.projectCode = pObj ? pObj.code : '';
+          t.projectName = pObj ? pObj.customerName : '';
+          t.dueDate = document.getElementById('dtDueDate').value;
+          t.priority = document.getElementById('dtPriority').value;
+          t.notes = document.getElementById('dtNotes').value.trim();
+        }
+      } else {
+        const newDt = {
+          id: 'dtask_' + Date.now() + Math.random().toString(36).substr(2, 4),
+          title: title,
+          projectId: projectId,
+          projectCode: pObj ? pObj.code : '',
+          projectName: pObj ? pObj.customerName : '',
+          assignedBy: assignedByName,
+          assigneeId: assigneeId,
+          assigneeName: assigneeUser ? assigneeUser.name : '',
+          assigneeRole: assigneeUser ? assigneeUser.role : '',
+          assigneeRoleTitle: assigneeUser ? assigneeUser.roleTitle : '',
+          dueDate: document.getElementById('dtDueDate').value || new Date().toISOString().split('T')[0],
+          priority: document.getElementById('dtPriority').value || 'normal',
+          status: 'pending',
+          notes: document.getElementById('dtNotes').value.trim(),
+          createdAt: new Date().toISOString()
+        };
+        dailyTasks.unshift(newDt);
+      }
+
+      saveAllData();
+      closeDailyTaskModal();
+      renderApp();
+
+      safeSwal({ icon: 'success', title: 'มอบหมายงานเรียบร้อยแล้ว', timer: 1200, showConfirmButton: false });
+    }
+
+    function handleDeleteDailyTask() {
+      if (!activeDailyTaskId) return;
+      Swal.fire({
+        title: 'ลบรายการมอบหมายงาน?',
+        text: 'คุณต้องการลบภารกิจนี้ใช่หรือไม่?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        confirmButtonText: 'ใช่, ลบภารกิจ',
+        cancelButtonText: 'ยกเลิก'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dailyTasks = dailyTasks.filter(t => t.id !== activeDailyTaskId);
+          saveAllData();
+          closeDailyTaskModal();
+          renderApp();
+          safeSwal({ icon: 'success', title: 'ลบภารกิจเรียบร้อย', timer: 1000, showConfirmButton: false });
+        }
+      });
+    }
+
+    function updateDailyTaskStatus(taskId, newStatus) {
+      const t = dailyTasks.find(item => item.id === taskId);
+      if (t) {
+        t.status = newStatus;
+        saveAllData();
+        renderApp();
+        safeSwal({ icon: 'success', title: 'อัปเดตสถานะภารกิจแล้ว', timer: 1000, showConfirmButton: false });
+      }
+    }
+
+    // --- RECEIPTS & TAX INVOICES SYSTEM (ระบบเก็บบิลซื้อของ และใบกำกับภาษี) ---
+    function getSampleInvoices() {
+      return [
+        {
+          id: 'inv_101',
+          docType: 'tax_invoice',
+          docNo: 'INV-2026-0801',
+          vendorName: 'ไทวัสดุ สาขาอ่อนนุช (บริษัท ซีพี ออลล์ จำกัด)',
+          taxId: '0105536000123',
+          projectId: 'proj_101',
+          projectCode: 'SRW-2026-001',
+          projectName: 'คุณอนันต์ สุขเสริฐ',
+          amount: 45000,
+          hasVat: 'vat7',
+          vatAmount: 3150,
+          totalAmount: 48150,
+          docDate: '2026-08-15',
+          recordedBy: 'ศิริกร (Foreman)',
+          fileUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600',
+          status: 'approved',
+          notes: 'สั่งซื้อสีทาภายใน ทาฝ้า และสีรองพื้นปูนเก่า',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'inv_102',
+          docType: 'receipt',
+          docNo: 'REC-9921',
+          vendorName: 'โฮมโปร สุขุมวิท 77',
+          taxId: '',
+          projectId: 'proj_101',
+          projectCode: 'SRW-2026-001',
+          projectName: 'คุณอนันต์ สุขเสริฐ',
+          amount: 12500,
+          hasVat: 'vat7',
+          vatAmount: 875,
+          totalAmount: 13375,
+          docDate: '2026-08-18',
+          recordedBy: 'ภัควัฒน์ (Designer)',
+          fileUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600',
+          status: 'pending',
+          notes: 'ซื้ออุปกรณ์โคมไฟดาวน์ไลท์ LED สีวอร์มไวท์',
+          createdAt: new Date().toISOString()
+        }
+      ];
+    }
+
+    function calcInvoiceVat() {
+      const amountEl = document.getElementById('invAmount');
+      const hasVatEl = document.getElementById('invHasVat');
+      const vatEl = document.getElementById('invVatAmount');
+      const totalEl = document.getElementById('invTotalAmount');
+
+      if (!amountEl || !vatEl || !totalEl) return;
+
+      const amt = parseFloat(amountEl.value) || 0;
+      const isVat = hasVatEl ? hasVatEl.value === 'vat7' : true;
+
+      const vat = isVat ? Math.round(amt * 0.07 * 100) / 100 : 0;
+      const total = Math.round((amt + vat) * 100) / 100;
+
+      vatEl.value = vat.toFixed(2);
+      totalEl.value = total.toFixed(2);
+    }
+
+    function sampleAttachBillPhoto() {
+      const samplePhotos = [
+        'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600',
+        'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600',
+        'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=600'
+      ];
+      const randomPhoto = samplePhotos[Math.floor(Math.random() * samplePhotos.length)];
+      const fileUrlEl = document.getElementById('invFileUrl');
+      if (fileUrlEl) fileUrlEl.value = randomPhoto;
+      safeSwal({ icon: 'success', title: 'แนบตัวอย่างรูปถ่ายบิลเรียบร้อยแล้ว', timer: 1000, showConfirmButton: false });
+    }
+
+    function renderProjectInvoices(p) {
+      const container = document.getElementById('pmInvoicesListContainer');
+      const elSpent = document.getElementById('pmInvTotalSpent');
+      const elVat = document.getElementById('pmInvTotalVat');
+
+      if (!container || !p) return;
+
+      const safeInvoices = Array.isArray(invoices) ? invoices : [];
+      const projInvoices = safeInvoices.filter(inv => inv && inv.projectId === p.id);
+
+      const totalSpent = projInvoices.reduce((sum, item) => sum + (Number(item.totalAmount) || 0), 0);
+      const totalVat = projInvoices.reduce((sum, item) => sum + (Number(item.vatAmount) || 0), 0);
+
+      if (elSpent) elSpent.textContent = `${totalSpent.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿`;
+      if (elVat) elVat.textContent = `${totalVat.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿`;
+
+      if (projInvoices.length === 0) {
+        container.innerHTML = '<div class="text-xs text-slate-400 py-4 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">ยังไม่มีรายการบิลสั่งของในโครงการนี้ กดปุ่มด้านบนเพื่อบันทึกบิลใหม่</div>';
+        return;
+      }
+
+      const docTypeBadges = {
+        tax_invoice: '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-800">📄 ใบกำกับภาษี</span>',
+        receipt: '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">🧾 บิลซื้อของ</span>',
+        delivery_note: '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">📦 ใบส่งสินค้า</span>'
+      };
+
+      const statusBadges = {
+        pending: 'bg-amber-100 text-amber-900 font-bold',
+        approved: 'bg-emerald-100 text-emerald-800 font-bold',
+        rejected: 'bg-red-100 text-red-800 font-bold'
+      };
+
+      const isManager = currentUser && currentUser.role === 'manager';
+
+      container.innerHTML = projInvoices.map(item => {
+        const formattedDate = item.docDate ? new Date(item.docDate).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }) : 'ไม่ระบุวัน';
+        const formattedTotal = (Number(item.totalAmount) || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+        const formattedAmount = (Number(item.amount) || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+        const formattedVat = (Number(item.vatAmount) || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+
+        return `
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2 flex-wrap">
+                ${docTypeBadges[item.docType] || docTypeBadges.receipt}
+                <strong class="text-slate-800">🏪 ${item.vendorName}</strong>
+                ${item.docNo ? `<span class="text-[10px] text-slate-500 font-medium"># ${item.docNo}</span>` : ''}
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-emerald-700 text-sm">${formattedTotal} ฿</span>
+                ${isManager ? `
+                  <select onchange="updateInvoiceStatus('${item.id}', this.value)" class="px-2 py-1 rounded-lg text-[11px] ${statusBadges[item.status] || 'bg-slate-100'} border border-slate-200 cursor-pointer focus:outline-none">
+                    <option value="pending" ${item.status === 'pending' ? 'selected' : ''}>⏳ รอตรวจสอบ</option>
+                    <option value="approved" ${item.status === 'approved' ? 'selected' : ''}>✅ อนุมัติเบิกแล้ว</option>
+                    <option value="rejected" ${item.status === 'rejected' ? 'selected' : ''}>❌ ไม่ผ่านอนุมัติ</option>
+                  </select>
+                ` : `
+                  <span class="px-2 py-1 rounded-lg text-[11px] ${statusBadges[item.status] || 'bg-slate-100'} border border-slate-200">
+                    ${item.status === 'approved' ? '✅ อนุมัติเบิกแล้ว' : item.status === 'rejected' ? '❌ ไม่ผ่านอนุมัติ' : '⏳ รอตรวจสอบ'}
+                  </span>
+                `}
+
+                <button onclick="openInvoiceModal('${item.id}', '${p.id}')" class="p-1 text-slate-400 hover:text-emerald-600 rounded" title="แก้ไขบิล">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between text-[10px] text-slate-500 pt-1 border-t border-slate-200/60">
+              <div>
+                <span>ก่อน VAT: <strong>${formattedAmount} ฿</strong> | VAT 7%: <strong>${formattedVat} ฿</strong> | สั่งโดย: <strong>${item.recordedBy || 'พนักงาน'}</strong> | วันที่: <strong>${formattedDate}</strong></span>
+              </div>
+              ${item.fileUrl ? `
+                <a href="${item.fileUrl}" target="_blank" class="text-emerald-700 font-bold hover:underline flex items-center gap-1">
+                  <i data-lucide="image" class="w-3 h-3"></i>
+                  <span>ดูรูปถ่ายบิล</span>
+                </a>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }
+
+    function openInvoiceModalForCurrentProject() {
+      if (!activeProjectId) {
+        safeSwal({ icon: 'warning', title: 'ไม่พบรหัสโครงการ', text: 'กรุณาเปิดหน้าต่างโครงการก่อนกดเพิ่มบิล' });
+        return;
+      }
+      openInvoiceModal(null, activeProjectId);
+    }
+
+    function openInvoiceModal(invoiceId = null, defaultProjectId = null) {
+      activeInvoiceId = invoiceId;
+
+      // Populate Projects dropdown
+      const projectSelect = document.getElementById('invProjectSelect');
+      if (projectSelect) {
+        projectSelect.innerHTML = '<option value="">-- ค่าใช้จ่ายกลาง / งานทั่วไป --</option>';
+        if (Array.isArray(projects)) {
+          projects.forEach(p => {
+            if (p) projectSelect.insertAdjacentHTML('beforeend', `<option value="${p.id}">${p.code} - ${p.customerName}</option>`);
+          });
+        }
+      }
+
+      const modal = document.getElementById('invoiceModal');
+      const btnDelete = document.getElementById('btnDeleteInvoice');
+
+      const targetProjId = defaultProjectId || activeProjectId || '';
+
+      if (invoiceId) {
+        const item = invoices.find(inv => inv.id === invoiceId);
+        if (!item) return;
+        document.getElementById('invModalHeader').querySelector('span').textContent = 'แก้ไขบิล / ใบกำกับภาษี';
+        document.getElementById('invDocType').value = item.docType || 'receipt';
+        document.getElementById('invDocNo').value = item.docNo || '';
+        document.getElementById('invVendorName').value = item.vendorName || '';
+        document.getElementById('invTaxId').value = item.taxId || '';
+        document.getElementById('invProjectSelect').value = item.projectId || targetProjId;
+        document.getElementById('invDocDate').value = item.docDate || new Date().toISOString().split('T')[0];
+        document.getElementById('invAmount').value = item.amount || 0;
+        document.getElementById('invHasVat').value = item.hasVat || 'vat7';
+        document.getElementById('invFileUrl').value = item.fileUrl || '';
+        document.getElementById('invNotes').value = item.notes || '';
+        calcInvoiceVat();
+        if (btnDelete) btnDelete.classList.remove('hidden');
+      } else {
+        document.getElementById('invModalHeader').querySelector('span').textContent = 'บันทึกบิลซื้อของ & ใบกำกับภาษีใหม่';
+        document.getElementById('invDocType').value = 'receipt';
+        document.getElementById('invDocNo').value = '';
+        document.getElementById('invVendorName').value = '';
+        document.getElementById('invTaxId').value = '';
+        document.getElementById('invProjectSelect').value = targetProjId;
+        document.getElementById('invDocDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('invAmount').value = '';
+        document.getElementById('invHasVat').value = 'vat7';
+        document.getElementById('invVatAmount').value = '0.00';
+        document.getElementById('invTotalAmount').value = '0.00';
+        document.getElementById('invFileUrl').value = '';
+        document.getElementById('invNotes').value = '';
+        if (btnDelete) btnDelete.classList.add('hidden');
+      }
+
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeInvoiceModal() {
+      const modal = document.getElementById('invoiceModal');
+      if (modal) modal.classList.add('hidden');
+      activeInvoiceId = null;
+    }
+
+    function saveInvoice(e) {
+      if (e && e.preventDefault) e.preventDefault();
+
+      const docType = document.getElementById('invDocType').value;
+      const vendorName = document.getElementById('invVendorName').value.trim();
+      const amount = parseFloat(document.getElementById('invAmount').value) || 0;
+
+      if (!vendorName || amount <= 0) {
+        safeSwal({ icon: 'warning', title: 'กรุณากรอกข้อมูลให้ครบถ้วน', text: 'กรุณาระบุชื่อร้านค้า และยอดเงินซื้อของ' });
+        return;
+      }
+
+      const hasVat = document.getElementById('invHasVat').value;
+      const isVat = hasVat === 'vat7';
+      const vatAmount = isVat ? Math.round(amount * 0.07 * 100) / 100 : 0;
+      const totalAmount = Math.round((amount + vatAmount) * 100) / 100;
+
+      const projectId = document.getElementById('invProjectSelect').value;
+      const pObj = projects.find(p => p.id === projectId);
+
+      const recordedByName = currentUser ? `${currentUser.name} (${currentUser.roleTitle ? currentUser.roleTitle.split(' ')[0] : currentUser.role})` : 'พนักงาน';
+
+      if (activeInvoiceId) {
+        const item = invoices.find(inv => inv.id === activeInvoiceId);
+        if (item) {
+          item.docType = docType;
+          item.docNo = document.getElementById('invDocNo').value.trim();
+          item.vendorName = vendorName;
+          item.taxId = document.getElementById('invTaxId').value.trim();
+          item.projectId = projectId;
+          item.projectCode = pObj ? pObj.code : '';
+          item.projectName = pObj ? pObj.customerName : '';
+          item.docDate = document.getElementById('invDocDate').value;
+          item.amount = amount;
+          item.hasVat = hasVat;
+          item.vatAmount = vatAmount;
+          item.totalAmount = totalAmount;
+          item.fileUrl = document.getElementById('invFileUrl').value.trim();
+          item.notes = document.getElementById('invNotes').value.trim();
+        }
+      } else {
+        const newInv = {
+          id: 'inv_' + Date.now() + Math.random().toString(36).substr(2, 4),
+          docType: docType,
+          docNo: document.getElementById('invDocNo').value.trim(),
+          vendorName: vendorName,
+          taxId: document.getElementById('invTaxId').value.trim(),
+          projectId: projectId,
+          projectCode: pObj ? pObj.code : '',
+          projectName: pObj ? pObj.customerName : '',
+          docDate: document.getElementById('invDocDate').value || new Date().toISOString().split('T')[0],
+          amount: amount,
+          hasVat: hasVat,
+          vatAmount: vatAmount,
+          totalAmount: totalAmount,
+          recordedBy: recordedByName,
+          fileUrl: document.getElementById('invFileUrl').value.trim(),
+          status: 'pending',
+          notes: document.getElementById('invNotes').value.trim(),
+          createdAt: new Date().toISOString()
+        };
+        invoices.unshift(newInv);
+      }
+
+      saveAllData();
+      closeInvoiceModal();
+      renderApp();
+
+      if (activeProjectId) {
+        const activeP = (projects || []).find(p => p.id === activeProjectId);
+        if (activeP) renderProjectInvoices(activeP);
+      }
+
+      safeSwal({ icon: 'success', title: 'บันทึกบิลเรียบร้อยแล้ว', timer: 1200, showConfirmButton: false });
+    }
+
+    function handleDeleteInvoice() {
+      if (!activeInvoiceId) return;
+      Swal.fire({
+        title: 'ลบบิลซื้อของ / ใบกำกับภาษี?',
+        text: 'คุณต้องการลบรายการนี้ใช่หรือไม่?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        confirmButtonText: 'ใช่, ลบบิล',
+        cancelButtonText: 'ยกเลิก'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          invoices = invoices.filter(inv => inv.id !== activeInvoiceId);
+          saveAllData();
+          closeInvoiceModal();
+          renderApp();
+          if (activeProjectId) {
+            const activeP = (projects || []).find(p => p.id === activeProjectId);
+            if (activeP) renderProjectInvoices(activeP);
+          }
+          safeSwal({ icon: 'success', title: 'ลบรายการเรียบร้อย', timer: 1000, showConfirmButton: false });
+        }
+      });
+    }
+
+    function updateInvoiceStatus(invoiceId, newStatus) {
+      const item = invoices.find(inv => inv.id === invoiceId);
+      if (item) {
+        item.status = newStatus;
+        saveAllData();
+        renderApp();
+        if (activeProjectId) {
+          const activeP = (projects || []).find(p => p.id === activeProjectId);
+          if (activeP) renderProjectInvoices(activeP);
+        }
+        safeSwal({ icon: 'success', title: 'อัปเดตสถานะการเบิกจ่ายแล้ว', timer: 1000, showConfirmButton: false });
+      }
+    }
+  </script>
+
+</body>
+</html>
